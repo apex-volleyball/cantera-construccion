@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<header class="site-header">
+<header class="site-header no-print">
   <div class="wrap app-header-bar" style="justify-content:space-between">
     <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
     <div class="role-switch">
@@ -22,79 +22,130 @@
 </header>
 
 <div class="app-shell dense-view">
-  <main class="app-main">
+  <main class="app-main no-print">
     <div class="wrap">
 
-      <h1 class="section-title mt-8">Panel de Administración Cantera</h1>
-      <p class="section-sub">Vista general de alumnos, equipos, obras y alertas del sistema.</p>
+      <div class="flex-between mt-8">
+        <div>
+          <h1 class="section-title mb-0">Panel de Administración Cantera</h1>
+          <p class="section-sub" style="margin-bottom:8px">Vista general de alumnos, equipos, obras, solicitudes de formación y certificados.</p>
+        </div>
+        <button id="btn-descargar-reporte" class="btn btn-secondary no-print">Descargar reporte</button>
+      </div>
 
       <!-- MÉTRICAS ============================================ -->
-      <div class="grid grid-4 mt-16">
+      <div class="grid grid-3 mt-16" id="grid-metricas">
         <div class="metric-card"><div class="num" id="m-alumnos">—</div><div class="label">Alumnos registrados</div></div>
         <div class="metric-card"><div class="num" id="m-certificados">—</div><div class="label">Alumnos certificados</div></div>
         <div class="metric-card"><div class="num" id="m-equipos">—</div><div class="label">Equipos activos</div></div>
         <div class="metric-card"><div class="num" id="m-obras">—</div><div class="label">Obras en ejecución</div></div>
+        <div class="metric-card"><div class="num" id="m-solicitudes">—</div><div class="label">Solicitudes de formación pendientes</div></div>
+        <div class="metric-card"><div class="num" id="m-incidencias">—</div><div class="label">Incidencias abiertas</div></div>
       </div>
 
-      <!-- ALERTAS ============================================= -->
-      <div class="section" style="padding-bottom:0">
-        <h2 class="section-title" style="font-size:19px">Alertas</h2>
-        <div id="lista-alertas"></div>
+      <!-- MENÚ DE PESTAÑAS ==================================== -->
+      <div class="tabs mt-24">
+        <button class="tab-btn active" data-tab="tab-resumen">Resumen</button>
+        <button class="tab-btn" data-tab="tab-alumnos">Alumnos</button>
+        <button class="tab-btn" data-tab="tab-equipos-obras">Equipos y obras</button>
+        <button class="tab-btn" data-tab="tab-solicitudes">Solicitudes de formación</button>
+        <button class="tab-btn" data-tab="tab-certificados">Certificados</button>
       </div>
 
-      <!-- RANKING DE EQUIPOS =================================== -->
-      <div class="section" style="padding-bottom:0">
-        <h2 class="section-title" style="font-size:19px">Ranking de confianza de equipos</h2>
-        <div class="grid grid-3" id="ranking-equipos"></div>
-      </div>
-
-      <!-- ALUMNOS ============================================== -->
-      <div class="section" style="padding-bottom:0">
-        <div class="flex-between">
-          <h2 class="section-title" style="font-size:19px">Alumnos</h2>
+      <!-- TAB: RESUMEN ======================================= -->
+      <div class="tab-panel active" id="tab-resumen">
+        <div class="section" style="padding-top:0;padding-bottom:0">
+          <h2 class="section-title" style="font-size:19px">Alertas</h2>
+          <div id="lista-alertas"></div>
         </div>
-        <div class="field" style="max-width:320px"><input type="text" id="buscador-alumnos" placeholder="Buscar por nombre o municipio…"></div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>Nombre</th><th>Municipio</th><th>Certificación</th><th>Equipo</th><th>Potencial</th></tr></thead>
-            <tbody id="tabla-alumnos"></tbody>
-          </table>
+        <div class="section" style="padding-bottom:0">
+          <h2 class="section-title" style="font-size:19px">Ranking de confianza de equipos</h2>
+          <div class="grid grid-3" id="ranking-equipos"></div>
         </div>
-      </div>
-
-      <!-- EQUIPOS ============================================== -->
-      <div class="section" style="padding-bottom:0">
-        <h2 class="section-title" style="font-size:19px">Equipos</h2>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Integrantes</th><th>Ubicación</th><th>Obra asignada</th><th>Disponibilidad</th></tr></thead>
-            <tbody id="tabla-equipos"></tbody>
-          </table>
+        <div class="section" style="padding-top:0">
+          <h2 class="section-title" style="font-size:19px">Criterios de éxito del piloto</h2>
+          <ul class="success-criteria" id="success-list"></ul>
+          <p class="hypothesis-note">Objetivo a validar durante el piloto, no resultados ya alcanzados.</p>
         </div>
       </div>
 
-      <!-- OBRAS ================================================ -->
-      <div class="section">
-        <h2 class="section-title" style="font-size:19px">Obras</h2>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>Código</th><th>Propietario</th><th>Equipo</th><th>Etapa</th><th>Avance</th><th>Riesgo</th><th>Entidad financiera</th></tr></thead>
-            <tbody id="tabla-obras"></tbody>
-          </table>
+      <!-- TAB: ALUMNOS ======================================== -->
+      <div class="tab-panel" id="tab-alumnos">
+        <div class="section" style="padding-top:0">
+          <div class="flex-between">
+            <h2 class="section-title" style="font-size:19px">Alumnos</h2>
+          </div>
+          <div class="field" style="max-width:320px"><input type="text" id="buscador-alumnos" placeholder="Buscar por nombre o municipio…"></div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Nombre</th><th>Municipio</th><th>Certificación</th><th>Equipo</th><th>Progreso</th><th>Potencial</th><th></th></tr></thead>
+              <tbody id="tabla-alumnos"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      <!-- CRITERIOS DE ÉXITO ==================================== -->
-      <div class="section" style="padding-top:0">
-        <h2 class="section-title" style="font-size:19px">Criterios de éxito del piloto</h2>
-        <ul class="success-criteria" id="success-list"></ul>
-        <p class="hypothesis-note">Objetivo a validar durante el piloto, no resultados ya alcanzados.</p>
+      <!-- TAB: EQUIPOS Y OBRAS ================================ -->
+      <div class="tab-panel" id="tab-equipos-obras">
+        <div class="section" style="padding-top:0;padding-bottom:0">
+          <h2 class="section-title" style="font-size:19px">Equipos</h2>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Integrantes</th><th>Ubicación</th><th>Obra asignada</th><th>Disponibilidad</th></tr></thead>
+              <tbody id="tabla-equipos"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="section" style="padding-top:0">
+          <h2 class="section-title" style="font-size:19px">Obras</h2>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Código</th><th>Propietario</th><th>Equipo</th><th>Etapa</th><th>Avance</th><th>Riesgo</th><th>Entidad financiera</th></tr></thead>
+              <tbody id="tabla-obras"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: SOLICITUDES DE FORMACIÓN ======================= -->
+      <div class="tab-panel" id="tab-solicitudes">
+        <div class="section" style="padding-top:0">
+          <h2 class="section-title" style="font-size:19px">Solicitudes de formación adicional</h2>
+          <p class="section-sub" style="margin-bottom:16px">Cursos del catálogo solicitados por los alumnos desde su vista. Aprueba el inicio y marca su finalización.</p>
+          <div id="lista-solicitudes"></div>
+        </div>
+      </div>
+
+      <!-- TAB: CERTIFICADOS ==================================== -->
+      <div class="tab-panel" id="tab-certificados">
+        <div class="section" style="padding-top:0;padding-bottom:0">
+          <h2 class="section-title" style="font-size:19px">Certificación principal</h2>
+          <p class="section-sub" style="margin-bottom:16px">Alumnos que ya cuentan con el certificado avalado por Cantera Construcción.</p>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Código de certificado</th><th>Alumno</th><th>Municipio</th><th>Nota promedio</th><th>Horas completadas</th></tr></thead>
+              <tbody id="tabla-certificados"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="section" style="padding-top:24px">
+          <h2 class="section-title" style="font-size:19px">Certificaciones de especialización</h2>
+          <p class="section-sub" style="margin-bottom:16px">Cursos adicionales del catálogo ya completados por los alumnos.</p>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Código de certificado</th><th>Alumno</th><th>Curso</th><th>Nota</th><th>Fecha</th></tr></thead>
+              <tbody id="tabla-certificados-esp"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
     </div>
   </main>
 
-  <footer class="app-footer">
+  <div class="only-print" id="reporte-imprimible"></div>
+
+  <footer class="app-footer no-print">
     <span class="tag">Prototipo v1 — Fase 1</span> Vista Administrador · datos de ejemplo, guardados solo en este navegador.
   </footer>
 </div>
