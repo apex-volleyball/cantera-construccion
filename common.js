@@ -9,7 +9,9 @@
    Índice:
    1. ÍCONOS SVG (inline, sin librerías externas)
    2. COMPONENTES DE MARCADO (badge, progreso, score ring, etapas)
-   3. COMPORTAMIENTO DE HEADER (reiniciar demo)
+   3. GRÁFICAS (barra CSS, línea SVG — cero dependencias)
+   4. NOTIFICACIONES DE NAVEGACIÓN (badges cruzados entre roles)
+   5. COMPORTAMIENTO DE HEADER (reiniciar demo)
    ========================================================= */
 
 window.CANTERA_UI = window.CANTERA_UI || {};
@@ -89,7 +91,102 @@ window.CANTERA_UI = window.CANTERA_UI || {};
     return (first + second).toUpperCase();
   }
 
-  /* 3. COMPORTAMIENTO DE HEADER ============================= */
+  /* 3. GRÁFICAS ============================================== */
+
+  function barChartHTML(items) {
+    if (!items || !items.length) {
+      return '<p class="line-chart-empty">Sin datos disponibles todavía.</p>';
+    }
+    return (
+      '<div class="bar-chart">' +
+      items.map(function (it) {
+        var max = it.max || 100;
+        var pct = Math.max(0, Math.min(100, Math.round(((it.value || 0) / max) * 100)));
+        var cls = it.clase ? " " + it.clase : "";
+        return (
+          '<div class="bar-col">' +
+            '<div class="bar' + cls + '" style="height:' + pct + '%">' +
+              '<span class="bar-value">' + it.value + "</span>" +
+            "</div>" +
+            '<div class="bar-label">' + it.label + "</div>" +
+          "</div>"
+        );
+      }).join("") +
+      "</div>"
+    );
+  }
+
+  function lineChartHTML(points) {
+    if (!points || points.length < 2) {
+      return '<div class="line-chart-wrap"><p class="line-chart-empty">Todavía no hay suficientes datos para mostrar la evolución.</p></div>';
+    }
+    var w = 640, h = 200, pad = 30;
+    var maxY = Math.max.apply(null, points.map(function (p) { return p.y; })) || 100;
+    var stepX = (w - pad * 2) / (points.length - 1);
+    var coords = points.map(function (p, i) {
+      var x = pad + i * stepX;
+      var y = h - pad - (Math.max(0, p.y) / maxY) * (h - pad * 2);
+      return { x: x, y: y, label: p.x };
+    });
+    var linePath = coords.map(function (c, i) { return (i === 0 ? "M" : "L") + c.x.toFixed(1) + " " + c.y.toFixed(1); }).join(" ");
+    var areaPath = linePath + " L " + coords[coords.length - 1].x.toFixed(1) + " " + (h - pad) +
+      " L " + coords[0].x.toFixed(1) + " " + (h - pad) + " Z";
+    var dots = coords.map(function (c) {
+      return '<circle cx="' + c.x.toFixed(1) + '" cy="' + c.y.toFixed(1) + '" r="3.5" fill="var(--sky)"></circle>';
+    }).join("");
+    var labels = coords.map(function (c) {
+      return '<text x="' + c.x.toFixed(1) + '" y="' + (h - 8) + '" font-size="10" fill="var(--gray-mid)" text-anchor="middle">' + c.label + "</text>";
+    }).join("");
+    return (
+      '<div class="line-chart-wrap">' +
+        '<svg viewBox="0 0 ' + w + " " + h + '" width="100%" height="200" preserveAspectRatio="none">' +
+          '<line x1="' + pad + '" y1="' + (h - pad) + '" x2="' + (w - pad) + '" y2="' + (h - pad) + '" stroke="var(--gray-border)" stroke-width="1"></line>' +
+          '<path d="' + areaPath + '" fill="var(--sky-light)" stroke="none"></path>' +
+          '<path d="' + linePath + '" fill="none" stroke="var(--sky)" stroke-width="2.5"></path>' +
+          dots +
+          labels +
+        "</svg>" +
+      "</div>"
+    );
+  }
+
+  /* 4. NOTIFICACIONES DE NAVEGACIÓN ========================== */
+
+  function computeNavCounts(data) {
+    var solicitudesPendientes = 0;
+    data.alumnos.forEach(function (a) {
+      (a.solicitudesFormacion || []).forEach(function (s) {
+        if (s.estado === "solicitada") solicitudesPendientes++;
+      });
+    });
+    var incidenciasAbiertas = data.incidencias.filter(function (i) { return i.estado === "abierta"; }).length;
+    var desembolsosPendientes = window.CANTERA.getDesembolsosPendientes(data).length;
+    return {
+      "admin.html": solicitudesPendientes + incidenciasAbiertas,
+      "jefe.html": incidenciasAbiertas,
+      "financiera.html": desembolsosPendientes
+    };
+  }
+
+  function renderNavBadges() {
+    if (!window.CANTERA || !document.querySelector(".role-switch")) return;
+    var data = window.CANTERA.loadData();
+    var counts = computeNavCounts(data);
+    document.querySelectorAll(".role-switch a").forEach(function (a) {
+      var existing = a.querySelector(".nav-badge");
+      if (existing) existing.remove();
+      var href = a.getAttribute("href");
+      var count = counts[href] || 0;
+      if (count > 0) {
+        var span = document.createElement("span");
+        span.className = "nav-badge";
+        span.textContent = count > 9 ? "9+" : String(count);
+        a.appendChild(span);
+      }
+    });
+  }
+
+  /* 5. COMPORTAMIENTO DE HEADER ============================= */
 
   function bindResetButtons() {
     var buttons = document.querySelectorAll(".reset-demo-btn");
@@ -123,6 +220,7 @@ window.CANTERA_UI = window.CANTERA_UI || {};
 
   document.addEventListener("DOMContentLoaded", bindResetButtons);
   document.addEventListener("DOMContentLoaded", checkStorageWarning);
+  document.addEventListener("DOMContentLoaded", renderNavBadges);
 
   /* API PÚBLICA ============================================ */
   window.CANTERA_UI = {
@@ -131,6 +229,9 @@ window.CANTERA_UI = window.CANTERA_UI || {};
     progressRowHTML: progressRowHTML,
     scoreRingHTML: scoreRingHTML,
     stageTrackerHTML: stageTrackerHTML,
-    initialsFromName: initialsFromName
+    initialsFromName: initialsFromName,
+    barChartHTML: barChartHTML,
+    lineChartHTML: lineChartHTML,
+    renderNavBadges: renderNavBadges
   };
 })();
