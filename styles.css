@@ -20,6 +20,7 @@
    15. UTILIDADES
    16. IMPRESIÓN (reporte descargable)
    17. RESPONSIVE
+   18. ASISTENTE DE CHAT (alumno)
    ========================================================= */
 
 /* 1. VARIABLES DE MARCA ================================= */
@@ -936,6 +937,135 @@ table.data-table tr:hover td { background: var(--gray-bg); }
 .only-print { display: none; }
 .pill-list { display: flex; flex-wrap: wrap; gap: 8px; }
 
+/* 18. ASISTENTE DE CHAT (alumno) =========================== */
+.chat-launcher {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 900;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.chat-launcher:hover { background: var(--navy-dark); }
+.chat-launcher-icon { display: flex; align-items: center; justify-content: center; }
+.chat-launcher-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+.chat-panel {
+  position: fixed;
+  bottom: 90px;
+  right: 22px;
+  z-index: 900;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  height: 460px;
+  max-height: calc(100vh - 120px);
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.chat-panel-header {
+  background: var(--navy);
+  color: var(--white);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.chat-panel-title { font-weight: 700; font-size: 14px; }
+.chat-panel-sub { font-size: 11px; color: var(--sky-light); opacity: 0.85; }
+.chat-panel-close {
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 15px;
+  cursor: pointer;
+  padding: 4px 6px;
+  line-height: 1;
+}
+.chat-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px;
+  background: var(--gray-bg);
+}
+.chat-msg {
+  max-width: 85%;
+  padding: 8px 11px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+.chat-msg-bot {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  color: var(--text);
+  border-bottom-left-radius: 3px;
+}
+.chat-msg-user {
+  background: var(--sky);
+  color: var(--white);
+  margin-left: auto;
+  border-bottom-right-radius: 3px;
+}
+.chat-pendientes { margin: 6px 0 0; padding-left: 18px; }
+.chat-pendientes li { margin-bottom: 4px; }
+.chat-panel-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--gray-border);
+  background: var(--white);
+  flex-shrink: 0;
+}
+.chat-panel-input-row input {
+  flex: 1;
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: var(--font);
+}
+.chat-panel-input-row button {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chat-panel-input-row button:hover { background: var(--navy-dark); }
+
 /* 16. IMPRESIÓN (reporte descargable) ====================== */
 @media print {
   .site-header, .app-footer, .no-print, .site-footer { display: none !important; }
@@ -959,6 +1089,14 @@ table.data-table tr:hover td { background: var(--gray-bg); }
 @media (max-width: 640px) {
   .grid-2, .grid-4 { grid-template-columns: 1fr; }
   .about-grid { grid-template-columns: 1fr; }
+  .chat-panel {
+    right: 12px;
+    left: 12px;
+    bottom: 82px;
+    width: auto;
+    max-width: none;
+  }
+  .chat-launcher { bottom: 16px; right: 16px; }
   .hero h1 { font-size: 28px; }
   .hero { padding: 50px 0 46px; }
   .featured-story { grid-template-columns: 1fr; text-align: center; }
