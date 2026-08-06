@@ -13,6 +13,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     var data = window.CANTERA.loadData();
     populateSelectorEquipo(data);
+    bindTabs();
 
     var initialId = getSelectedEquipoId(data);
     document.getElementById("selector-equipo").value = initialId;
@@ -37,6 +38,17 @@
     document.getElementById("bitacora-form").addEventListener("submit", handleBitacoraSubmit);
   });
 
+  function bindTabs() {
+    document.querySelectorAll(".tab-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+        document.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.remove("active"); });
+        btn.classList.add("active");
+        document.getElementById(btn.getAttribute("data-tab")).classList.add("active");
+      });
+    });
+  }
+
   function getSelectedEquipoId(data) {
     var stored = null;
     try { stored = localStorage.getItem(SELECTED_KEY); } catch (e) { stored = null; }
@@ -59,10 +71,11 @@
 
     renderEquipo(data, equipo);
     renderObra(data, equipo, obra);
-    renderIncidencias(data, obra);
+    renderIncidencias(data, obra, equipo);
     renderBitacoraForm(obra);
     renderBitacoraHistorial(data, obra);
     renderEvaluacion(equipo);
+    renderHistorialObras(data, equipo);
   }
 
   function renderEquipo(data, equipo) {
@@ -101,7 +114,7 @@
     document.getElementById("obra-progress-pct").textContent = obra.porcentajeAvance + "%";
   }
 
-  function renderIncidencias(data, obra) {
+  function renderIncidencias(data, obra, equipo) {
     var incidencias = window.CANTERA.getIncidenciasPorObra(data, obra.id);
     var el = document.getElementById("lista-incidencias");
     if (!incidencias.length) {
@@ -110,14 +123,32 @@
     }
     el.innerHTML = incidencias.map(function (inc) {
       var estadoBadge = inc.estado === "abierta" ? window.CANTERA_UI.badgeHTML("Abierta", "red") : window.CANTERA_UI.badgeHTML("Resuelta", "green");
+      var accionHTML = inc.estado === "abierta"
+        ? '<button class="btn btn-secondary btn-sm mt-8" data-resolver="' + inc.id + '">Marcar como resuelta</button>'
+        : "";
       return (
         '<div class="alert-item ' + (inc.severidad === "alta" ? "high" : "medium") + '" style="align-items:flex-start;flex-direction:column;gap:6px">' +
           '<div class="flex-between" style="width:100%"><strong>' + inc.tipo + "</strong>" + estadoBadge + "</div>" +
           "<div>" + inc.descripcion + "</div>" +
           (inc.resolucion ? '<div class="text-sm" style="color:var(--green)">Resolución: ' + inc.resolucion + "</div>" : "") +
+          accionHTML +
         "</div>"
       );
     }).join("");
+
+    el.querySelectorAll("button[data-resolver]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var incId = btn.getAttribute("data-resolver");
+        var inc = data.incidencias.filter(function (i) { return i.id === incId; })[0];
+        if (!inc) return;
+        var texto = window.prompt("Describe cómo se resolvió esta incidencia:", "");
+        if (texto === null) return;
+        inc.estado = "resuelta";
+        inc.resolucion = texto.trim() || "Resuelta por el jefe de grupo.";
+        window.CANTERA.saveData(data);
+        render(equipo.id);
+      });
+    });
   }
 
   function renderBitacoraForm(obra) {
@@ -188,6 +219,31 @@
         "<div>" + window.CANTERA_UI.badgeHTML(cat.label, cat.clase) + '<p class="text-sm text-mid mt-8 mb-0">' + cat.desc + "</p></div>" +
       "</div>" +
       criteriosHTML;
+  }
+
+  function renderHistorialObras(data, equipo) {
+    var el = document.getElementById("historial-obras");
+    var ids = equipo.historialObras && equipo.historialObras.length ? equipo.historialObras : [equipo.obraId];
+    var obras = ids.map(function (id) { return window.CANTERA.getObra(data, id); }).filter(Boolean);
+
+    if (!obras.length) {
+      el.innerHTML = '<p class="text-sm text-mid mb-0">Sin obras registradas todavía para este equipo.</p>';
+      return;
+    }
+
+    el.innerHTML = obras.map(function (obra) {
+      var riesgo = window.CANTERA.riesgoBadge(obra.estadoRiesgo);
+      var esActual = obra.id === equipo.obraId;
+      return (
+        '<div class="module-item">' +
+          '<div class="status-dot ' + (esActual ? "en_curso" : "completado") + '">' + (esActual ? "▶" : "✓") + "</div>" +
+          '<div class="info"><h4>' + obra.codigo + " · " + obra.tipoVivienda + "</h4><p>" + obra.ubicacion + " · " +
+            (esActual ? "En ejecución (" + obra.porcentajeAvance + "%)" : "Obra anterior") + "</p></div>" +
+          "<div>" + window.CANTERA_UI.badgeHTML(riesgo.texto, riesgo.clase) + "</div>" +
+        "</div>"
+      );
+    }).join("") +
+    '<p class="hypothesis-note mb-0">El historial completo de obras por equipo crecerá con cada proyecto entregado durante el piloto.</p>';
   }
 
   function handleBitacoraSubmit(e) {
