@@ -41,46 +41,67 @@
         <div class="metric-card"><div class="num" id="k-riesgo">—</div><div class="label">Obras en riesgo alto</div></div>
       </div>
 
-      <!-- OBRAS FINANCIADAS ==================================== -->
-      <div class="section" style="padding-bottom:0">
-        <h2 class="section-title" style="font-size:19px">Obras financiadas</h2>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>Código</th><th>Ubicación</th><th>Tipo de vivienda</th><th>Etapa</th><th>Avance</th><th>Riesgo</th><th>Equipo</th><th>Categoría</th></tr></thead>
-            <tbody id="tabla-obras-fin"></tbody>
-          </table>
+      <!-- MENÚ DE PESTAÑAS ==================================== -->
+      <div class="tabs mt-24">
+        <button class="tab-btn active" data-tab="tab-resumen">Resumen</button>
+        <button class="tab-btn" data-tab="tab-obras">Obras financiadas</button>
+        <button class="tab-btn" data-tab="tab-entidades">Por entidad financiera</button>
+        <button class="tab-btn" data-tab="tab-trazabilidad">Trazabilidad y documentación</button>
+      </div>
+
+      <!-- TAB: RESUMEN ======================================= -->
+      <div class="tab-panel active" id="tab-resumen">
+        <div class="section" style="padding-top:0;padding-bottom:0">
+          <h2 class="section-title" style="font-size:19px">Ranking de equipos certificados</h2>
+          <div class="grid grid-3" id="ranking-fin"></div>
+        </div>
+        <div class="section" style="padding-top:0">
+          <h2 class="section-title" style="font-size:19px">Criterios de éxito del piloto</h2>
+          <ul class="success-criteria" id="success-list-fin"></ul>
+          <p class="hypothesis-note">Objetivo a validar durante el piloto, no resultados ya alcanzados.</p>
         </div>
       </div>
 
-      <!-- RANKING ============================================== -->
-      <div class="section" style="padding-bottom:0">
-        <h2 class="section-title" style="font-size:19px">Ranking de equipos certificados</h2>
-        <div class="grid grid-3" id="ranking-fin"></div>
-      </div>
-
-      <!-- TRAZABILIDAD ========================================= -->
-      <div class="section no-print">
-        <h2 class="section-title" style="font-size:19px">Trazabilidad y documentación</h2>
-        <div class="field" style="max-width:360px">
-          <label for="selector-obra-fin">Ver trazabilidad de la obra</label>
-          <select id="selector-obra-fin"></select>
+      <!-- TAB: OBRAS FINANCIADAS ============================== -->
+      <div class="tab-panel" id="tab-obras">
+        <div class="section" style="padding-top:0">
+          <h2 class="section-title" style="font-size:19px">Obras financiadas</h2>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Código</th><th>Ubicación</th><th>Tipo de vivienda</th><th>Etapa</th><th>Avance</th><th>Riesgo</th><th>Equipo</th><th>Categoría</th></tr></thead>
+              <tbody id="tabla-obras-fin"></tbody>
+            </table>
+          </div>
         </div>
-        <div class="card mt-16" id="trazabilidad-resumen"></div>
-        <div class="mt-16" id="trazabilidad-bitacora"></div>
       </div>
 
-      <!-- CRITERIOS DE ÉXITO ==================================== -->
-      <div class="section" style="padding-top:0">
-        <h2 class="section-title" style="font-size:19px">Criterios de éxito del piloto</h2>
-        <ul class="success-criteria" id="success-list-fin"></ul>
-        <p class="hypothesis-note">Objetivo a validar durante el piloto, no resultados ya alcanzados.</p>
+      <!-- TAB: POR ENTIDAD FINANCIERA ========================= -->
+      <div class="tab-panel" id="tab-entidades">
+        <div class="section" style="padding-top:0">
+          <h2 class="section-title" style="font-size:19px">Desglose por entidad financiera</h2>
+          <p class="section-sub" style="margin-bottom:16px">Obras y avance agrupados por cada banco o fundación aliada del piloto.</p>
+          <div class="grid grid-2" id="entidades-grid"></div>
+        </div>
       </div>
 
-      <!-- REPORTE IMPRIMIBLE (solo visible al imprimir) ========= -->
-      <div class="only-print" id="reporte-imprimible"></div>
+      <!-- TAB: TRAZABILIDAD ==================================== -->
+      <div class="tab-panel" id="tab-trazabilidad">
+        <div class="section" style="padding-top:0">
+          <h2 class="section-title" style="font-size:19px">Trazabilidad y documentación</h2>
+          <div class="field" style="max-width:360px">
+            <label for="selector-obra-fin">Ver trazabilidad de la obra</label>
+            <select id="selector-obra-fin"></select>
+          </div>
+          <div class="card mt-16" id="trazabilidad-resumen"></div>
+          <div class="mt-16" id="trazabilidad-bitacora"></div>
+        </div>
+      </div>
 
     </div>
   </main>
+
+  <!-- REPORTE IMPRIMIBLE (solo visible al imprimir) ========= -->
+  <div class="only-print" id="reporte-imprimible"></div>
 
   <footer class="app-footer no-print">
     <span class="tag">Prototipo v1 — Fase 1</span> Vista Entidad Financiera · datos agregados de ejemplo.
