@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es-GT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Administrador — Cantera Construcción</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap app-header-bar" style="justify-content:space-between">
+    <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
+    <div class="role-switch">
+      <a href="alumno.html">Alumno</a>
+      <a href="jefe.html">Jefe de Grupo</a>
+      <a href="admin.html" class="active">Administrador</a>
+      <a href="financiera.html">Financiera</a>
+    </div>
+    <button class="reset-demo-btn no-print">↻ Reiniciar demo</button>
+  </div>
+</header>
+
+<div class="app-shell dense-view">
+  <main class="app-main">
+    <div class="wrap">
+
+      <h1 class="section-title mt-8">Panel de Administración Cantera</h1>
+      <p class="section-sub">Vista general de alumnos, equipos, obras y alertas del sistema.</p>
+
+      <!-- MÉTRICAS ============================================ -->
+      <div class="grid grid-4 mt-16">
+        <div class="metric-card"><div class="num" id="m-alumnos">—</div><div class="label">Alumnos registrados</div></div>
+        <div class="metric-card"><div class="num" id="m-certificados">—</div><div class="label">Alumnos certificados</div></div>
+        <div class="metric-card"><div class="num" id="m-equipos">—</div><div class="label">Equipos activos</div></div>
+        <div class="metric-card"><div class="num" id="m-obras">—</div><div class="label">Obras en ejecución</div></div>
+      </div>
+
+      <!-- ALERTAS ============================================= -->
+      <div class="section" style="padding-bottom:0">
+        <h2 class="section-title" style="font-size:19px">Alertas</h2>
+        <div id="lista-alertas"></div>
+      </div>
+
+      <!-- RANKING DE EQUIPOS =================================== -->
+      <div class="section" style="padding-bottom:0">
+        <h2 class="section-title" style="font-size:19px">Ranking de confianza de equipos</h2>
+        <div class="grid grid-3" id="ranking-equipos"></div>
+      </div>
+
+      <!-- ALUMNOS ============================================== -->
+      <div class="section" style="padding-bottom:0">
+        <div class="flex-between">
+          <h2 class="section-title" style="font-size:19px">Alumnos</h2>
+        </div>
+        <div class="field" style="max-width:320px"><input type="text" id="buscador-alumnos" placeholder="Buscar por nombre o municipio…"></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Nombre</th><th>Municipio</th><th>Certificación</th><th>Equipo</th><th>Potencial</th></tr></thead>
+            <tbody id="tabla-alumnos"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EQUIPOS ============================================== -->
+      <div class="section" style="padding-bottom:0">
+        <h2 class="section-title" style="font-size:19px">Equipos</h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Código</th><th>Nombre</th><th>Categoría</th><th>Integrantes</th><th>Ubicación</th><th>Obra asignada</th><th>Disponibilidad</th></tr></thead>
+            <tbody id="tabla-equipos"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- OBRAS ================================================ -->
+      <div class="section">
+        <h2 class="section-title" style="font-size:19px">Obras</h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Código</th><th>Propietario</th><th>Equipo</th><th>Etapa</th><th>Avance</th><th>Riesgo</th><th>Entidad financiera</th></tr></thead>
+            <tbody id="tabla-obras"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CRITERIOS DE ÉXITO ==================================== -->
+      <div class="section" style="padding-top:0">
+        <h2 class="section-title" style="font-size:19px">Criterios de éxito del piloto</h2>
+        <ul class="success-criteria" id="success-list"></ul>
+        <p class="hypothesis-note">Objetivo a validar durante el piloto, no resultados ya alcanzados.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <span class="tag">Prototipo v1 — Fase 1</span> Vista Administrador · datos de ejemplo, guardados solo en este navegador.
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
