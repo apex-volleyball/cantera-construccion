@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es-GT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Alumno — Cantera Construcción</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap app-header-bar" style="justify-content:space-between">
+    <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
+    <div class="role-switch">
+      <a href="alumno.html" class="active">Alumno</a>
+      <a href="jefe.html">Jefe de Grupo</a>
+      <a href="admin.html">Administrador</a>
+      <a href="financiera.html">Financiera</a>
+    </div>
+    <button class="reset-demo-btn no-print">↻ Reiniciar demo</button>
+  </div>
+</header>
+
+<div class="app-shell simple-view">
+  <main class="app-main">
+    <div class="wrap" style="max-width:720px">
+
+      <div class="field mt-8" style="max-width:360px">
+        <label for="selector-alumno">Ver perfil de (demo)</label>
+        <select id="selector-alumno"></select>
+      </div>
+
+      <!-- PERFIL ============================================ -->
+      <div class="card mt-16">
+        <div class="flex gap-16" style="align-items:center">
+          <div class="avatar" id="perfil-avatar">—</div>
+          <div style="flex:1">
+            <h2 id="perfil-nombre" style="color:var(--navy);margin-bottom:4px">—</h2>
+            <p class="text-sm text-mid mb-0" id="perfil-meta">—</p>
+          </div>
+          <div id="perfil-cert-badge"></div>
+        </div>
+      </div>
+
+      <!-- ESTADO / LISTO PARA EQUIPO ========================= -->
+      <div class="card mt-16" id="estado-equipo-card"></div>
+
+      <!-- RUTA FORMATIVA ===================================== -->
+      <div class="card mt-16">
+        <div class="card-title">Mi ruta formativa</div>
+        <div class="progress-row mt-8" style="margin-bottom:18px">
+          <div class="progress green" id="progreso-general-bar"><span style="width:0%"></span></div>
+          <div class="pct" id="progreso-general-pct">0%</div>
+        </div>
+        <div id="lista-modulos"></div>
+      </div>
+
+      <!-- EVALUACIÓN ========================================= -->
+      <div class="card mt-16">
+        <div class="card-title">Mi evaluación</div>
+        <ul class="success-criteria" id="lista-evaluacion"></ul>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <span class="tag">Prototipo v1 — Fase 1</span> Vista Alumno · datos de ejemplo, guardados solo en este navegador.
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script src="alumno.js"></script>
+</body>
+</html>
