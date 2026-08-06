@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es-GT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Jefe de Grupo — Cantera Construcción</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap app-header-bar" style="justify-content:space-between">
+    <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
+    <div class="role-switch">
+      <a href="alumno.html">Alumno</a>
+      <a href="jefe.html" class="active">Jefe de Grupo</a>
+      <a href="admin.html">Administrador</a>
+      <a href="financiera.html">Financiera</a>
+    </div>
+    <button class="reset-demo-btn no-print">↻ Reiniciar demo</button>
+  </div>
+</header>
+
+<div class="app-shell simple-view">
+  <main class="app-main">
+    <div class="wrap" style="max-width:760px">
+
+      <div class="field mt-8" style="max-width:360px">
+        <label for="selector-equipo">Ver equipo (demo)</label>
+        <select id="selector-equipo"></select>
+      </div>
+
+      <!-- MI EQUIPO ========================================== -->
+      <div class="card mt-16">
+        <div class="card-title">Mi equipo</div>
+        <div class="flex-between mt-8" style="margin-bottom:14px">
+          <div>
+            <h3 id="equipo-nombre" style="color:var(--navy);margin-bottom:2px">—</h3>
+            <p class="text-sm text-mid mb-0" id="equipo-meta">—</p>
+          </div>
+          <div id="equipo-score"></div>
+        </div>
+        <div id="lista-integrantes"></div>
+      </div>
+
+      <!-- OBRA ASIGNADA ======================================= -->
+      <div class="card mt-16">
+        <div class="card-title">Obra asignada</div>
+        <div id="obra-info"></div>
+        <div class="mt-16"><div id="obra-stage-tracker"></div></div>
+        <div class="progress-row mt-16">
+          <div class="progress" id="obra-progress-bar"><span style="width:0%"></span></div>
+          <div class="pct" id="obra-progress-pct">0%</div>
+        </div>
+      </div>
+
+      <!-- INCIDENCIAS ========================================= -->
+      <div class="card mt-16">
+        <div class="card-title">Incidencias de la obra</div>
+        <div id="lista-incidencias"></div>
+      </div>
+
+      <!-- BITÁCORA DIGITAL: FORMULARIO ======================== -->
+      <div class="card mt-16">
+        <div class="card-title">Registrar avance en bitácora</div>
+        <form id="bitacora-form">
+          <div class="field-row">
+            <div class="field">
+              <label for="b-etapa">Etapa</label>
+              <select id="b-etapa"></select>
+            </div>
+            <div class="field">
+              <label for="b-avance">% de avance de la obra</label>
+              <input id="b-avance" type="number" min="0" max="100" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="b-desc">Descripción del avance</label>
+            <textarea id="b-desc" placeholder="¿Qué se hizo hoy en la obra?" required></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="b-materiales">Materiales recibidos</label><input id="b-materiales" type="text" placeholder="Ej. Cemento, block, arena"></div>
+            <div class="field"><label for="b-herramientas">Herramientas utilizadas</label><input id="b-herramientas" type="text" placeholder="Ej. Mezcladora, andamios"></div>
+          </div>
+          <button type="button" id="b-evidencia-btn" class="big-tap-btn no-print" style="margin-bottom:16px">📷 Adjuntar evidencia (simulada)</button>
+          <div id="b-evidencia-lista" class="pill-list mt-8" style="margin-bottom:12px"></div>
+
+          <div class="checkbox-row mt-8" style="margin-bottom:14px">
+            <input type="checkbox" id="b-incidencia-check">
+            <label for="b-incidencia-check" style="margin:0">Reportar una incidencia junto con este avance</label>
+          </div>
+          <div id="b-incidencia-campos" style="display:none;margin-bottom:14px">
+            <div class="field-row">
+              <div class="field"><label for="b-inc-tipo">Tipo de incidencia</label><input id="b-inc-tipo" type="text" placeholder="Ej. Retraso de materiales, seguridad"></div>
+              <div class="field">
+                <label for="b-inc-severidad">Severidad</label>
+                <select id="b-inc-severidad"><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option></select>
+              </div>
+            </div>
+            <div class="field"><label for="b-inc-desc">Descripción de la incidencia</label><textarea id="b-inc-desc" placeholder="Describe lo ocurrido"></textarea></div>
+          </div>
+
+          <div class="checkbox-row mt-8" style="margin-bottom:16px">
+            <input type="checkbox" id="b-revision-check">
+            <label for="b-revision-check" style="margin:0">Solicitar revisión del supervisor</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block">Guardar entrada de bitácora</button>
+        </form>
+      </div>
+
+      <!-- BITÁCORA: HISTORIAL ================================= -->
+      <div class="card mt-16">
+        <div class="card-title">Historial de bitácora</div>
+        <div id="lista-bitacora"></div>
+      </div>
+
+      <!-- EVALUACIÓN DEL EQUIPO =============================== -->
+      <div class="card mt-16">
+        <div class="card-title">Evaluación de mi equipo</div>
+        <div id="evaluacion-equipo"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <span class="tag">Prototipo v1 — Fase 1</span> Vista Jefe de Grupo · datos de ejemplo, guardados solo en este navegador.
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script src="jefe.js"></script>
+</body>
+</html>
