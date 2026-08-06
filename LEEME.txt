@@ -1,0 +1,42 @@
+CANTERA CONSTRUCCIÓN — PROTOTIPO WEB (FASE 1)
+================================================
+
+QUÉ CONTIENE ESTE REPOSITORIO
+--------------------------
+- index.html        -> Landing page pública
+- demo.html         -> Selector de rol para entrar a la demo
+- alumno.html        -> Vista Alumno / Trabajador
+- jefe.html          -> Vista Jefe de Grupo
+- admin.html         -> Vista Administrador Cantera
+- financiera.html    -> Vista Entidad Financiera
+- styles.css         -> Estilos compartidos (marca, componentes)
+- data.js            -> Datos de ejemplo + guardado en el navegador (localStorage)
+- common.js          -> Header, botón "Reiniciar demo", componentes visuales
+- landing.js, alumno.js, jefe.js, admin.js, financiera.js
+                     -> Lógica de cada página (independiente entre sí)
+
+CÓMO SE PUBLICA
+------------------------
+Este sitio está publicado con GitHub Pages directamente desde la rama main
+de este repositorio. Al hacer cambios y subirlos a main, GitHub Pages
+actualiza automáticamente el sitio público en unos minutos.
+
+FORMULARIO DE CONTACTO ("Solicitar piloto o reunión")
+--------------------------------------------------------
+El formulario de la landing envía las respuestas a un Google Form propio,
+cuyos datos caen automáticamente en una Google Sheet vinculada. No requiere
+backend ni configuración adicional: solo se actualizan los IDs de entrada
+en landing.js si el formulario de Google cambia de estructura.
+
+CÓMO REINICIAR LA DEMO
+------------------------
+Cualquier vista interna (alumno, jefe, admin, financiera) tiene un botón
+"Reiniciar demo" en la esquina superior derecha. Lo borra todo y vuelve a los
+datos de ejemplo originales — útil si vas a presentar varias veces seguidas.
+
+SOBRE LOS DATOS
+------------------
+Todos los nombres, obras y equipos son datos de ejemplo (ficticios), pensados
+para mostrar el flujo completo del sistema con un caso destacado (Juan Carlos
+Morales). No hay conexión a ningún sistema real todavía — esto es un
+prototipo de Fase 1, tal como se definió en la arquitectura del proyecto.
