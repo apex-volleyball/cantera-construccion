@@ -16,6 +16,7 @@
     bindTabs();
     renderMetricas();
     renderAlertas();
+    renderComparativaEquipos();
     renderRanking();
     renderTablaAlumnos("");
     renderTablaEquipos();
@@ -96,6 +97,17 @@
     el.innerHTML = items.map(function (it) {
       return '<div class="alert-item ' + it.nivel + '">' + window.CANTERA_UI.ICONS.alert + "<span>" + it.texto + "</span></div>";
     }).join("");
+  }
+
+  function renderComparativaEquipos() {
+    var ordenado = data.equipos.slice().sort(function (a, b) { return b.calificacionActual - a.calificacionActual; });
+    var items = ordenado.map(function (eq) {
+      var cat = window.CANTERA.scoreCategoria(eq.calificacionActual);
+      return { label: eq.codigo, value: eq.calificacionActual, max: 100, clase: cat.clase === "sky" ? "" : cat.clase };
+    });
+    document.getElementById("comparativa-equipos").innerHTML =
+      '<p class="text-sm text-mid" style="margin-bottom:4px">Calificación actual (0–100) de cada equipo certificado.</p>' +
+      window.CANTERA_UI.barChartHTML(items);
   }
 
   function renderRanking() {
@@ -280,6 +292,7 @@
         renderMetricas();
         renderAlertas();
         renderCertificados();
+        if (window.CANTERA_UI.renderNavBadges) window.CANTERA_UI.renderNavBadges();
       });
     });
   }
