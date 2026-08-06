@@ -34,11 +34,13 @@
       </div>
 
       <!-- KPIs =============================================== -->
-      <div class="grid grid-4 mt-16">
+      <div class="grid grid-3 mt-16">
         <div class="metric-card"><div class="num" id="k-obras">—</div><div class="label">Obras financiadas</div></div>
         <div class="metric-card"><div class="num" id="k-equipos">—</div><div class="label">Equipos certificados</div></div>
         <div class="metric-card"><div class="num" id="k-avance">—</div><div class="label">Avance promedio</div></div>
         <div class="metric-card"><div class="num" id="k-riesgo">—</div><div class="label">Obras en riesgo alto</div></div>
+        <div class="metric-card"><div class="num" id="k-monto-total">—</div><div class="label">Monto total financiado</div></div>
+        <div class="metric-card"><div class="num" id="k-monto-liberado">—</div><div class="label">Monto liberado a la fecha</div></div>
       </div>
 
       <!-- MENÚ DE PESTAÑAS ==================================== -->
@@ -46,12 +48,17 @@
         <button class="tab-btn active" data-tab="tab-resumen">Resumen</button>
         <button class="tab-btn" data-tab="tab-obras">Obras financiadas</button>
         <button class="tab-btn" data-tab="tab-entidades">Por entidad financiera</button>
+        <button class="tab-btn" data-tab="tab-desembolsos">Desembolsos</button>
         <button class="tab-btn" data-tab="tab-trazabilidad">Trazabilidad y documentación</button>
       </div>
 
       <!-- TAB: RESUMEN ======================================= -->
       <div class="tab-panel active" id="tab-resumen">
         <div class="section" style="padding-top:0;padding-bottom:0">
+          <h2 class="section-title" style="font-size:19px">Comparativa de equipos</h2>
+          <div class="card" id="comparativa-equipos-fin"></div>
+        </div>
+        <div class="section" style="padding-bottom:0">
           <h2 class="section-title" style="font-size:19px">Ranking de equipos certificados</h2>
           <div class="grid grid-3" id="ranking-fin"></div>
         </div>
@@ -84,6 +91,15 @@
         </div>
       </div>
 
+      <!-- TAB: DESEMBOLSOS ===================================== -->
+      <div class="tab-panel" id="tab-desembolsos">
+        <div class="section" style="padding-top:0">
+          <h2 class="section-title" style="font-size:19px">Desembolsos por etapa</h2>
+          <p class="section-sub" style="margin-bottom:16px">Cada obra recibe el financiamiento en tramos, liberados conforme avanza de etapa. Libera un tramo cuando la obra alcance la etapa requerida.</p>
+          <div id="lista-desembolsos"></div>
+        </div>
+      </div>
+
       <!-- TAB: TRAZABILIDAD ==================================== -->
       <div class="tab-panel" id="tab-trazabilidad">
         <div class="section" style="padding-top:0">
@@ -93,6 +109,10 @@
             <select id="selector-obra-fin"></select>
           </div>
           <div class="card mt-16" id="trazabilidad-resumen"></div>
+          <div class="mt-16">
+            <h2 class="section-title" style="font-size:16px">Evolución del avance reportado</h2>
+            <div id="avance-historico"></div>
+          </div>
           <div class="mt-16" id="trazabilidad-bitacora"></div>
         </div>
       </div>
