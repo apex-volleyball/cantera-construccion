@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es-GT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar a demo — Cantera Construcción</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
+    <a href="index.html" class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,0.4)">← Volver a la página pública</a>
+  </div>
+</header>
+
+<div class="app-shell">
+  <main class="app-main">
+    <div class="wrap">
+      <div class="text-center" style="max-width:640px;margin:0 auto 40px">
+        <h1 class="section-title" style="margin-bottom:10px">¿Desde qué rol quieres ver la demo?</h1>
+        <p class="section-sub" style="margin:0 auto">No hay inicio de sesión real todavía — elige un rol para ver el sistema completo desde esa perspectiva. Puedes cambiar de rol en cualquier momento desde el encabezado.</p>
+      </div>
+
+      <div class="grid grid-4">
+        <a href="alumno.html" class="card card-hover" style="text-decoration:none;color:inherit;text-align:center">
+          <div id="icon-alumno" style="color:var(--sky);margin:0 auto 14px;width:34px"></div>
+          <h3 style="color:var(--navy);font-size:16px;margin-bottom:6px">Alumno / Trabajador</h3>
+          <p class="text-sm text-mid">Perfil, ruta formativa, evaluaciones y certificación.</p>
+        </a>
+        <a href="jefe.html" class="card card-hover" style="text-decoration:none;color:inherit;text-align:center">
+          <div id="icon-jefe" style="color:var(--sky);margin:0 auto 14px;width:34px"></div>
+          <h3 style="color:var(--navy);font-size:16px;margin-bottom:6px">Jefe de Grupo</h3>
+          <p class="text-sm text-mid">Equipo, obra asignada, bitácora digital e incidencias.</p>
+        </a>
+        <a href="admin.html" class="card card-hover" style="text-decoration:none;color:inherit;text-align:center">
+          <div id="icon-admin" style="color:var(--sky);margin:0 auto 14px;width:34px"></div>
+          <h3 style="color:var(--navy);font-size:16px;margin-bottom:6px">Administrador Cantera</h3>
+          <p class="text-sm text-mid">Alumnos, equipos, obras, ranking y alertas.</p>
+        </a>
+        <a href="financiera.html" class="card card-hover" style="text-decoration:none;color:inherit;text-align:center">
+          <div id="icon-financiera" style="color:var(--sky);margin:0 auto 14px;width:34px"></div>
+          <h3 style="color:var(--navy);font-size:16px;margin-bottom:6px">Entidad Financiera</h3>
+          <p class="text-sm text-mid">Obras financiadas, riesgo, trazabilidad y reporte.</p>
+        </a>
+      </div>
+
+      <div class="text-center mt-32">
+        <button class="reset-demo-btn no-print" style="color:var(--navy);border-color:var(--gray-border)">Reiniciar demo</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <span class="tag">Prototipo v1 — Fase 1</span> Datos de ejemplo, sin conexión a sistemas reales.
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var icons = window.CANTERA_UI.ICONS;
+    document.getElementById("icon-alumno").innerHTML = icons.route;
+    document.getElementById("icon-jefe").innerHTML = icons.tool;
+    document.getElementById("icon-admin").innerHTML = icons.chart;
+    document.getElementById("icon-financiera").innerHTML = icons.bank;
+  });
+</script>
+</body>
+</html>
