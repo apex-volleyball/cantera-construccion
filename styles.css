@@ -729,6 +729,80 @@ table.data-table tr:hover td { background: var(--gray-bg); }
 .team-rank-card h4 { font-size: 15px; color: var(--navy); margin-bottom: 4px; }
 .team-rank-card p { font-size: 12.5px; color: var(--gray-mid); margin: 0; }
 
+/* 14.5 NOTIFICACIONES DE NAV Y GRÁFICAS ==================== */
+.nav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 800;
+  margin-left: 6px;
+  line-height: 1;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  height: 180px;
+  padding: 26px 6px 0;
+}
+.bar-chart .bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+.bar-chart .bar {
+  width: 100%;
+  max-width: 56px;
+  min-height: 3px;
+  border-radius: 6px 6px 0 0;
+  background: var(--sky);
+  position: relative;
+}
+.bar-chart .bar .bar-value {
+  position: absolute;
+  top: -22px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--navy);
+}
+.bar-chart .bar-col .bar-label {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--gray-mid);
+  text-align: center;
+}
+.bar-chart .bar.green { background: var(--green); }
+.bar-chart .bar.yellow { background: var(--yellow); }
+.bar-chart .bar.red { background: var(--red); }
+
+.line-chart-wrap {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.line-chart-empty {
+  font-size: 13px;
+  color: var(--gray-mid);
+  text-align: center;
+  padding: 30px 0;
+  margin: 0;
+}
+
 /* 15. UTILIDADES =========================================== */
 .flex { display: flex; }
 .flex-between { display: flex; align-items: center; justify-content: space-between; }
