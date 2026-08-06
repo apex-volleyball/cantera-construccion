@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<header class="site-header">
+<header class="site-header no-print">
   <div class="wrap app-header-bar" style="justify-content:space-between">
     <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
     <div class="role-switch">
@@ -23,7 +23,7 @@
 
 <div class="app-shell simple-view">
   <main class="app-main">
-    <div class="wrap" style="max-width:720px">
+    <div class="wrap no-print" style="max-width:760px">
 
       <div class="field mt-8" style="max-width:360px">
         <label for="selector-alumno">Ver perfil de (demo)</label>
@@ -42,29 +42,70 @@
         </div>
       </div>
 
-      <!-- ESTADO / LISTO PARA EQUIPO ========================= -->
-      <div class="card mt-16" id="estado-equipo-card"></div>
-
-      <!-- RUTA FORMATIVA ===================================== -->
-      <div class="card mt-16">
-        <div class="card-title">Mi ruta formativa</div>
-        <div class="progress-row mt-8" style="margin-bottom:18px">
-          <div class="progress green" id="progreso-general-bar"><span style="width:0%"></span></div>
-          <div class="pct" id="progreso-general-pct">0%</div>
-        </div>
-        <div id="lista-modulos"></div>
+      <!-- MENÚ DE PESTAÑAS =================================== -->
+      <div class="tabs mt-16">
+        <button class="tab-btn active" data-tab="tab-resumen">Resumen</button>
+        <button class="tab-btn" data-tab="tab-ruta">Ruta formativa</button>
+        <button class="tab-btn" data-tab="tab-catalogo">Adquirir formaciones</button>
+        <button class="tab-btn" data-tab="tab-evaluacion">Evaluación y notas</button>
+        <button class="tab-btn" data-tab="tab-certificados">Certificados</button>
       </div>
 
-      <!-- EVALUACIÓN ========================================= -->
-      <div class="card mt-16">
-        <div class="card-title">Mi evaluación</div>
-        <ul class="success-criteria" id="lista-evaluacion"></ul>
+      <!-- TAB: RESUMEN ======================================= -->
+      <div class="tab-panel active" id="tab-resumen">
+        <div class="card" id="estado-equipo-card"></div>
+        <div class="grid grid-4 mt-16" id="resumen-stats"></div>
+      </div>
+
+      <!-- TAB: RUTA FORMATIVA ================================ -->
+      <div class="tab-panel" id="tab-ruta">
+        <div class="card">
+          <div class="card-title">Mi ruta formativa</div>
+          <div class="progress-row mt-8" style="margin-bottom:18px">
+            <div class="progress green" id="progreso-general-bar"><span style="width:0%"></span></div>
+            <div class="pct" id="progreso-general-pct">0%</div>
+          </div>
+          <div id="lista-modulos"></div>
+        </div>
+      </div>
+
+      <!-- TAB: ADQUIRIR FORMACIONES =========================== -->
+      <div class="tab-panel" id="tab-catalogo">
+        <div class="card">
+          <div class="card-title">Adquirir nuevas formaciones</div>
+          <p class="text-sm text-mid">Especializaciones adicionales para ampliar tu perfil y tu potencial de rol. Algunas están cubiertas por Cantera y otras tienen un costo asociado.</p>
+          <div id="aviso-catalogo"></div>
+          <div class="grid grid-2 mt-16" id="lista-catalogo"></div>
+        </div>
+      </div>
+
+      <!-- TAB: EVALUACIÓN Y NOTAS ============================ -->
+      <div class="tab-panel" id="tab-evaluacion">
+        <div class="card">
+          <div class="card-title">Boletín de notas</div>
+          <div class="grid grid-3" style="margin-bottom:18px" id="resumen-notas"></div>
+          <div id="lista-notas-modulos"></div>
+        </div>
+        <div class="card mt-16">
+          <div class="card-title">Criterios de evaluación</div>
+          <ul class="success-criteria" id="lista-evaluacion"></ul>
+        </div>
+      </div>
+
+      <!-- TAB: CERTIFICADOS =================================== -->
+      <div class="tab-panel" id="tab-certificados">
+        <div id="certificado-principal"></div>
+        <div class="mt-16" id="certificados-especializacion"></div>
       </div>
 
     </div>
+
+    <!-- Bloque solo visible al imprimir un certificado (PDF) -->
+    <div class="only-print" id="certificado-imprimible"></div>
+
   </main>
 
-  <footer class="app-footer">
+  <footer class="app-footer no-print">
     <span class="tag">Prototipo v1 — Fase 1</span> Vista Alumno · datos de ejemplo, guardados solo en este navegador.
   </footer>
 </div>
