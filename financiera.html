@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es-GT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Entidad Financiera — Cantera Construcción</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header no-print">
+  <div class="wrap app-header-bar" style="justify-content:space-between">
+    <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
+    <div class="role-switch">
+      <a href="alumno.html">Alumno</a>
+      <a href="jefe.html">Jefe de Grupo</a>
+      <a href="admin.html">Administrador</a>
+      <a href="financiera.html" class="active">Financiera</a>
+    </div>
+    <button class="reset-demo-btn no-print">↻ Reiniciar demo</button>
+  </div>
+</header>
+
+<div class="app-shell dense-view">
+  <main class="app-main">
+    <div class="wrap">
+
+      <div class="flex-between mt-8">
+        <div>
+          <h1 class="section-title mb-0">Panel Ejecutivo — Entidad Financiera</h1>
+          <p class="section-sub" style="margin-bottom:8px">Vista agregada por equipo y obra. No se muestran datos personales de los trabajadores.</p>
+        </div>
+        <button id="btn-descargar-reporte" class="btn btn-secondary no-print">Descargar reporte</button>
+      </div>
+
+      <!-- KPIs =============================================== -->
+      <div class="grid grid-4 mt-16">
+        <div class="metric-card"><div class="num" id="k-obras">—</div><div class="label">Obras financiadas</div></div>
+        <div class="metric-card"><div class="num" id="k-equipos">—</div><div class="label">Equipos certificados</div></div>
+        <div class="metric-card"><div class="num" id="k-avance">—</div><div class="label">Avance promedio</div></div>
+        <div class="metric-card"><div class="num" id="k-riesgo">—</div><div class="label">Obras en riesgo alto</div></div>
+      </div>
+
+      <!-- OBRAS FINANCIADAS ==================================== -->
+      <div class="section" style="padding-bottom:0">
+        <h2 class="section-title" style="font-size:19px">Obras financiadas</h2>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Código</th><th>Ubicación</th><th>Tipo de vivienda</th><th>Etapa</th><th>Avance</th><th>Riesgo</th><th>Equipo</th><th>Categoría</th></tr></thead>
+            <tbody id="tabla-obras-fin"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RANKING ============================================== -->
+      <div class="section" style="padding-bottom:0">
+        <h2 class="section-title" style="font-size:19px">Ranking de equipos certificados</h2>
+        <div class="grid grid-3" id="ranking-fin"></div>
+      </div>
+
+      <!-- TRAZABILIDAD ========================================= -->
+      <div class="section no-print">
+        <h2 class="section-title" style="font-size:19px">Trazabilidad y documentación</h2>
+        <div class="field" style="max-width:360px">
+          <label for="selector-obra-fin">Ver trazabilidad de la obra</label>
+          <select id="selector-obra-fin"></select>
+        </div>
+        <div class="card mt-16" id="trazabilidad-resumen"></div>
+        <div class="mt-16" id="trazabilidad-bitacora"></div>
+      </div>
+
+      <!-- CRITERIOS DE ÉXITO ==================================== -->
+      <div class="section" style="padding-top:0">
+        <h2 class="section-title" style="font-size:19px">Criterios de éxito del piloto</h2>
+        <ul class="success-criteria" id="success-list-fin"></ul>
+        <p class="hypothesis-note">Objetivo a validar durante el piloto, no resultados ya alcanzados.</p>
+      </div>
+
+      <!-- REPORTE IMPRIMIBLE (solo visible al imprimir) ========= -->
+      <div class="only-print" id="reporte-imprimible"></div>
+
+    </div>
+  </main>
+
+  <footer class="app-footer no-print">
+    <span class="tag">Prototipo v1 — Fase 1</span> Vista Entidad Financiera · datos agregados de ejemplo.
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script src="financiera.js"></script>
+</body>
+</html>
