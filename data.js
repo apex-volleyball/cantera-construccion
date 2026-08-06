@@ -127,6 +127,14 @@ window.CANTERA = window.CANTERA || {};
       horas: 24, modalidad: "presencial", costoQ: 300, icono: "shield" }
   ];
 
+  var TRAMOS_DESEMBOLSO = [
+    { id: "t1", etapaRequerida: "Preparación", pct: 20, nombre: "Anticipo e inicio de obra" },
+    { id: "t2", etapaRequerida: "Cimentación", pct: 25, nombre: "Cimentación completada" },
+    { id: "t3", etapaRequerida: "Levantado", pct: 25, nombre: "Levantado de muros completado" },
+    { id: "t4", etapaRequerida: "Acabados", pct: 20, nombre: "Acabados completados" },
+    { id: "t5", etapaRequerida: "Entrega", pct: 10, nombre: "Entrega final de la vivienda" }
+  ];
+
   /* 2. DATOS SEMILLA ====================================== */
 
   function strHash(s) {
@@ -154,6 +162,15 @@ window.CANTERA = window.CANTERA || {};
       if (m.orden < hastaOrden) return { moduloId: m.id, estado: "completado", fecha: "2026-05-01", nota: notaModulo(alumnoId, m.id) };
       if (m.orden === hastaOrden) return { moduloId: m.id, estado: estadoActual || "en_curso", fecha: null, nota: null };
       return { moduloId: m.id, estado: "pendiente", fecha: null, nota: null };
+    });
+  }
+
+  function generarDesembolsos(obra) {
+    var idxObra = ETAPAS_OBRA.indexOf(obra.etapaActual);
+    return TRAMOS_DESEMBOLSO.map(function (t) {
+      var idxTramo = ETAPAS_OBRA.indexOf(t.etapaRequerida);
+      var estado = idxTramo < idxObra ? "liberado" : (idxTramo === idxObra ? "disponible" : "pendiente");
+      return { tramoId: t.id, estado: estado, fechaLiberacion: estado === "liberado" ? obra.fechaInicio : null };
     });
   }
 
@@ -321,21 +338,21 @@ window.CANTERA = window.CANTERA || {};
         propietario: "Familia López Ramírez", entidadFinancieraId: "ef-01", equipoId: "eq-alfa",
         fechaInicio: "2026-05-04", fechaEstimadaEntrega: "2026-09-15", etapaActual: "Acabados",
         supervisor: "Ing. Rodrigo Paz", tipoVivienda: "Vivienda unifamiliar de 65 m²",
-        estadoRiesgo: "bajo", porcentajeAvance: 82, destacada: true
+        estadoRiesgo: "bajo", porcentajeAvance: 82, destacada: true, montoTotalFinanciadoQ: 195000
       },
       {
         id: "ob-002", codigo: "OB-2026-002", ubicacion: "Chimaltenango, Guatemala",
         propietario: "Familia Ramírez Coy", entidadFinancieraId: "ef-01", equipoId: "eq-beta",
         fechaInicio: "2026-06-01", fechaEstimadaEntrega: "2026-10-30", etapaActual: "Instalaciones",
         supervisor: "Ing. Fernando Ixchop", tipoVivienda: "Vivienda unifamiliar de 72 m²",
-        estadoRiesgo: "medio", porcentajeAvance: 55, destacada: false
+        estadoRiesgo: "medio", porcentajeAvance: 55, destacada: false, montoTotalFinanciadoQ: 216000
       },
       {
         id: "ob-003", codigo: "OB-2026-003", ubicacion: "Santa Apolonia, Chimaltenango",
         propietario: "Familia Gómez Sical", entidadFinancieraId: "ef-02", equipoId: "eq-gamma",
         fechaInicio: "2026-06-20", fechaEstimadaEntrega: "2026-11-10", etapaActual: "Cimentación",
         supervisor: "Ing. Marta Xoc", tipoVivienda: "Vivienda unifamiliar de 58 m²",
-        estadoRiesgo: "alto", porcentajeAvance: 25, destacada: false
+        estadoRiesgo: "alto", porcentajeAvance: 25, destacada: false, montoTotalFinanciadoQ: 174000
       }
     ],
 
@@ -409,6 +426,8 @@ window.CANTERA = window.CANTERA || {};
         resolucion: "Se reforzó el uso obligatorio de equipo de protección personal y se realizó una charla de seguridad de 30 minutos con todo el equipo." }
     ]
   };
+
+  SEED.obras.forEach(function (o) { o.desembolsos = generarDesembolsos(o); });
 
   /* 3. PERSISTENCIA ======================================== */
 
@@ -620,6 +639,64 @@ window.CANTERA = window.CANTERA || {};
     return "CC-ESP-2026-" + alumno.id.toUpperCase() + "-" + cursoId.toUpperCase();
   }
 
+  function getTramosDesembolso() { return TRAMOS_DESEMBOLSO; }
+
+  function getTramo(tramoId) {
+    return TRAMOS_DESEMBOLSO.filter(function (t) { return t.id === tramoId; })[0] || null;
+  }
+
+  function getDesembolso(obra, tramoId) {
+    return (obra.desembolsos || []).filter(function (d) { return d.tramoId === tramoId; })[0] || null;
+  }
+
+  function montoTramo(obra, tramoId) {
+    var t = getTramo(tramoId);
+    if (!t) return 0;
+    return Math.round(obra.montoTotalFinanciadoQ * t.pct / 100);
+  }
+
+  function montoLiberado(obra) {
+    return (obra.desembolsos || [])
+      .filter(function (d) { return d.estado === "liberado"; })
+      .reduce(function (sum, d) { return sum + montoTramo(obra, d.tramoId); }, 0);
+  }
+
+  function liberarDesembolso(data, obraId, tramoId) {
+    var obra = getObra(data, obraId);
+    if (!obra) return false;
+    var d = getDesembolso(obra, tramoId);
+    if (!d || d.estado !== "disponible") return false;
+    d.estado = "liberado";
+    d.fechaLiberacion = new Date().toISOString().slice(0, 10);
+    saveData(data);
+    return true;
+  }
+
+  function getDesembolsosPendientes(data) {
+    var out = [];
+    data.obras.forEach(function (obra) {
+      (obra.desembolsos || []).forEach(function (d) {
+        if (d.estado === "disponible") out.push({ obra: obra, desembolso: d });
+      });
+    });
+    return out;
+  }
+
+  function desembolsoEstadoBadge(estado) {
+    var map = {
+      pendiente: { texto: "Pendiente", clase: "gray" },
+      disponible: { texto: "Listo para liberar", clase: "yellow" },
+      liberado: { texto: "Liberado", clase: "green" }
+    };
+    return map[estado] || { texto: estado, clase: "gray" };
+  }
+
+  function formatQ(monto) {
+    var str = Math.round(monto || 0).toString();
+    var withCommas = str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return "Q " + withCommas;
+  }
+
   /* API PÚBLICA ============================================ */
   window.CANTERA = {
     MODULOS_FORMATIVOS: MODULOS_FORMATIVOS,
@@ -627,6 +704,7 @@ window.CANTERA = window.CANTERA || {};
     CRITERIOS_EVALUACION: CRITERIOS_EVALUACION,
     CRITERIOS_EXITO_PILOTO: CRITERIOS_EXITO_PILOTO,
     CATALOGO_FORMACIONES: CATALOGO_FORMACIONES,
+    TRAMOS_DESEMBOLSO: TRAMOS_DESEMBOLSO,
 
     loadData: loadData,
     saveData: saveData,
@@ -653,6 +731,16 @@ window.CANTERA = window.CANTERA || {};
     horasCompletadas: horasCompletadas,
     codigoCertificado: codigoCertificado,
     codigoCertificadoEspecializacion: codigoCertificadoEspecializacion,
+
+    getTramosDesembolso: getTramosDesembolso,
+    getTramo: getTramo,
+    getDesembolso: getDesembolso,
+    montoTramo: montoTramo,
+    montoLiberado: montoLiberado,
+    liberarDesembolso: liberarDesembolso,
+    getDesembolsosPendientes: getDesembolsosPendientes,
+    desembolsoEstadoBadge: desembolsoEstadoBadge,
+    formatQ: formatQ,
 
     formatFecha: formatFecha,
     scoreCategoria: scoreCategoria,
