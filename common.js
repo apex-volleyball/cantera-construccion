@@ -32,7 +32,8 @@ window.CANTERA_UI = window.CANTERA_UI || {};
     route: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 7l8 10M8 6h6a4 4 0 0 1 4 4v0"/></svg>',
     ai: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="7" width="14" height="11" rx="2"/><path d="M12 3v4M8 11h.01M16 11h.01M9 15h6"/></svg>',
     camera: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
-    refresh: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 11A8 8 0 1 0 19 15"/><path d="M20 4v7h-7"/></svg>'
+    refresh: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 11A8 8 0 1 0 19 15"/><path d="M20 4v7h-7"/></svg>',
+    chat: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>'
   };
 
   /* 2. COMPONENTES DE MARCADO =============================== */
