@@ -147,6 +147,7 @@
         inc.resolucion = texto.trim() || "Resuelta por el jefe de grupo.";
         window.CANTERA.saveData(data);
         render(equipo.id);
+        if (window.CANTERA_UI.renderNavBadges) window.CANTERA_UI.renderNavBadges();
       });
     });
   }
@@ -296,6 +297,7 @@
 
     window.CANTERA.saveData(data);
     render(equipoId);
+    if (window.CANTERA_UI.renderNavBadges) window.CANTERA_UI.renderNavBadges();
   }
 
   function capitalize(s) {
