@@ -24,16 +24,66 @@ window.CANTERA = window.CANTERA || {};
   /* 1. CONSTANTES DE REFERENCIA ========================== */
 
   var MODULOS_FORMATIVOS = [
-    { id: "m1",  orden: 1,  nombre: "Inducción a Cantera Construcción", tipo: "teórico", horas: 2 },
-    { id: "m2",  orden: 2,  nombre: "Seguridad básica en obra", tipo: "teórico", horas: 4 },
-    { id: "m3",  orden: 3,  nombre: "Buenas prácticas de construcción", tipo: "teórico", horas: 4 },
-    { id: "m4",  orden: 4,  nombre: "Uso y cuidado de herramientas", tipo: "práctico", horas: 6 },
-    { id: "m5",  orden: 5,  nombre: "Mezcladoras, generadores, barrenos, puntales y andamios", tipo: "práctico", horas: 6 },
-    { id: "m6",  orden: 6,  nombre: "Orden, limpieza y prevención de riesgos", tipo: "teórico", horas: 3 },
-    { id: "m7",  orden: 7,  nombre: "Documentación digital y bitácora", tipo: "práctico", horas: 3 },
-    { id: "m8",  orden: 8,  nombre: "Comunicación con supervisor, propietario y entidad financiera", tipo: "teórico", horas: 3 },
-    { id: "m9",  orden: 9,  nombre: "Calidad de ejecución", tipo: "práctico", horas: 5 },
-    { id: "m10", orden: 10, nombre: "Evaluación práctica final", tipo: "práctico", horas: 4 }
+    { id: "m1", orden: 1, nombre: "Inducción a Cantera Construcción", tipo: "teórico", horas: 2,
+      contenido: [
+        { tipo: "video", titulo: "Bienvenida y modelo Cantera", minutos: 12 },
+        { tipo: "lectura", titulo: "Cómo funciona la certificación por equipos", minutos: 10 }
+      ],
+      examen: { preguntas: 8, notaMinima: 70 } },
+    { id: "m2", orden: 2, nombre: "Seguridad básica en obra", tipo: "teórico", horas: 4,
+      contenido: [
+        { tipo: "video", titulo: "Equipo de protección personal", minutos: 15 },
+        { tipo: "video", titulo: "Riesgos comunes en obra gris", minutos: 18 },
+        { tipo: "lectura", titulo: "Protocolo ante accidentes", minutos: 8 }
+      ],
+      examen: { preguntas: 12, notaMinima: 70 } },
+    { id: "m3", orden: 3, nombre: "Buenas prácticas de construcción", tipo: "teórico", horas: 4,
+      contenido: [
+        { tipo: "video", titulo: "Estándares de calidad Cantera", minutos: 20 },
+        { tipo: "lectura", titulo: "Errores comunes y cómo evitarlos", minutos: 12 }
+      ],
+      examen: { preguntas: 10, notaMinima: 70 } },
+    { id: "m4", orden: 4, nombre: "Uso y cuidado de herramientas", tipo: "práctico", horas: 6,
+      contenido: [
+        { tipo: "video", titulo: "Herramienta manual básica", minutos: 14 },
+        { tipo: "practica", titulo: "Taller supervisado de herramientas", minutos: 180 }
+      ],
+      examen: { preguntas: 10, notaMinima: 70 } },
+    { id: "m5", orden: 5, nombre: "Mezcladoras, generadores, barrenos, puntales y andamios", tipo: "práctico", horas: 6,
+      contenido: [
+        { tipo: "video", titulo: "Operación segura de mezcladoras y generadores", minutos: 16 },
+        { tipo: "practica", titulo: "Práctica de armado de andamios", minutos: 180 }
+      ],
+      examen: { preguntas: 10, notaMinima: 70 } },
+    { id: "m6", orden: 6, nombre: "Orden, limpieza y prevención de riesgos", tipo: "teórico", horas: 3,
+      contenido: [
+        { tipo: "video", titulo: "Orden en obra (metodología 5S adaptada)", minutos: 14 },
+        { tipo: "lectura", titulo: "Checklist de prevención de riesgos", minutos: 9 }
+      ],
+      examen: { preguntas: 8, notaMinima: 70 } },
+    { id: "m7", orden: 7, nombre: "Documentación digital y bitácora", tipo: "práctico", horas: 3,
+      contenido: [
+        { tipo: "video", titulo: "Cómo registrar avance en la bitácora digital", minutos: 12 },
+        { tipo: "practica", titulo: "Práctica de registro con evidencias fotográficas", minutos: 60 }
+      ],
+      examen: { preguntas: 8, notaMinima: 70 } },
+    { id: "m8", orden: 8, nombre: "Comunicación con supervisor, propietario y entidad financiera", tipo: "teórico", horas: 3,
+      contenido: [
+        { tipo: "video", titulo: "Reportes claros y a tiempo", minutos: 13 },
+        { tipo: "lectura", titulo: "Trato con el propietario de la vivienda", minutos: 10 }
+      ],
+      examen: { preguntas: 8, notaMinima: 70 } },
+    { id: "m9", orden: 9, nombre: "Calidad de ejecución", tipo: "práctico", horas: 5,
+      contenido: [
+        { tipo: "video", titulo: "Control de calidad por etapa", minutos: 15 },
+        { tipo: "practica", titulo: "Taller de autoevaluación de calidad", minutos: 120 }
+      ],
+      examen: { preguntas: 10, notaMinima: 70 } },
+    { id: "m10", orden: 10, nombre: "Evaluación práctica final", tipo: "práctico", horas: 4,
+      contenido: [
+        { tipo: "practica", titulo: "Evaluación práctica integradora en obra simulada", minutos: 240 }
+      ],
+      examen: { preguntas: 15, notaMinima: 75 } }
   ];
 
   var ETAPAS_OBRA = ["Preparación", "Cimentación", "Levantado", "Instalaciones", "Acabados", "Revisión final", "Entrega"];
@@ -56,19 +106,54 @@ window.CANTERA = window.CANTERA || {};
     "Satisfacción del propietario validada en el 100% de las entregas."
   ];
 
+  var CATALOGO_FORMACIONES = [
+    { id: "cf-01", nombre: "Electricidad residencial básica", categoria: "Especialización técnica",
+      descripcion: "Instalaciones eléctricas seguras para vivienda unifamiliar: circuitos, tableros y normas básicas.",
+      horas: 12, modalidad: "virtual", costoQ: 0, icono: "tool" },
+    { id: "cf-02", nombre: "Fontanería residencial básica", categoria: "Especialización técnica",
+      descripcion: "Instalación y reparación de tubería de agua potable y drenajes en vivienda.",
+      horas: 10, modalidad: "virtual", costoQ: 0, icono: "tool" },
+    { id: "cf-03", nombre: "Acabados finos y pintura decorativa", categoria: "Especialización técnica",
+      descripcion: "Técnicas de acabado fino, texturizados y pintura decorativa para entregas de mayor valor.",
+      horas: 16, modalidad: "presencial", costoQ: 150, icono: "building" },
+    { id: "cf-04", nombre: "Lectura avanzada de planos", categoria: "Especialización técnica",
+      descripcion: "Interpretación de planos arquitectónicos y estructurales más complejos.",
+      horas: 8, modalidad: "virtual", costoQ: 0, icono: "doc" },
+    { id: "cf-05", nombre: "Supervisión y liderazgo de equipos", categoria: "Liderazgo",
+      descripcion: "Habilidades para coordinar un equipo, resolver conflictos y reportar a supervisores y entidades financieras.",
+      horas: 20, modalidad: "presencial", costoQ: 250, icono: "chart" },
+    { id: "cf-06", nombre: "Manejo seguro de maquinaria pesada", categoria: "Especialización técnica",
+      descripcion: "Operación y mantenimiento básico de maquinaria de mayor riesgo utilizada en obra.",
+      horas: 24, modalidad: "presencial", costoQ: 300, icono: "shield" }
+  ];
+
   /* 2. DATOS SEMILLA ====================================== */
 
-  function progresoCompleto() {
+  function strHash(s) {
+    var h = 0;
+    for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) | 0; }
+    return Math.abs(h);
+  }
+
+  var NOTAS_BASE_MODULO = { m1: 94, m2: 88, m3: 90, m4: 92, m5: 86, m6: 91, m7: 95, m8: 89, m9: 87, m10: 93 };
+
+  function notaModulo(alumnoId, moduloId) {
+    var base = NOTAS_BASE_MODULO[moduloId] || 88;
+    var variacion = (strHash(alumnoId + moduloId) % 9) - 4;
+    return Math.max(70, Math.min(100, base + variacion));
+  }
+
+  function progresoCompleto(alumnoId) {
     return MODULOS_FORMATIVOS.map(function (m) {
-      return { moduloId: m.id, estado: "completado", fecha: "2026-04-15" };
+      return { moduloId: m.id, estado: "completado", fecha: "2026-04-15", nota: notaModulo(alumnoId, m.id) };
     });
   }
 
-  function progresoParcial(hastaOrden, estadoActual) {
+  function progresoParcial(alumnoId, hastaOrden, estadoActual) {
     return MODULOS_FORMATIVOS.map(function (m) {
-      if (m.orden < hastaOrden) return { moduloId: m.id, estado: "completado", fecha: "2026-05-01" };
-      if (m.orden === hastaOrden) return { moduloId: m.id, estado: estadoActual || "en_curso", fecha: null };
-      return { moduloId: m.id, estado: "pendiente", fecha: null };
+      if (m.orden < hastaOrden) return { moduloId: m.id, estado: "completado", fecha: "2026-05-01", nota: notaModulo(alumnoId, m.id) };
+      if (m.orden === hastaOrden) return { moduloId: m.id, estado: estadoActual || "en_curso", fecha: null, nota: null };
+      return { moduloId: m.id, estado: "pendiente", fecha: null, nota: null };
     });
   }
 
@@ -85,7 +170,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "avanzado", interesConstruccion: "alto", telefono: "5555-0101",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "jefe", equipoId: "eq-alfa", rolEnEquipo: "jefe", destacado: true,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-01"),
+        solicitudesFormacion: []
       },
       {
         id: "al-02", nombre: "María Fernanda Us", edad: 24, municipio: "San Juan Sacatepéquez",
@@ -93,7 +179,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "intermedio", interesConstruccion: "alto", telefono: "5555-0102",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "asistente", equipoId: "eq-alfa", rolEnEquipo: "asistente", destacado: false,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-02"),
+        solicitudesFormacion: []
       },
       {
         id: "al-03", nombre: "Pedro Tzul", edad: 22, municipio: "San Juan Sacatepéquez",
@@ -101,7 +188,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "inicial", interesConstruccion: "alto", telefono: "5555-0103",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "ayudante", equipoId: "eq-alfa", rolEnEquipo: "ayudante", destacado: false,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-03"),
+        solicitudesFormacion: []
       },
       {
         id: "al-04", nombre: "Carlos Ramírez", edad: 29, municipio: "Mixco",
@@ -109,7 +197,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "intermedio", interesConstruccion: "medio", telefono: "5555-0104",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "ayudante", equipoId: "eq-alfa", rolEnEquipo: "ayudante", destacado: false,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-04"),
+        solicitudesFormacion: []
       },
       {
         id: "al-05", nombre: "Marvin Osorio", edad: 31, municipio: "Chimaltenango",
@@ -117,7 +206,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "avanzado", interesConstruccion: "alto", telefono: "5555-0105",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "jefe", equipoId: "eq-beta", rolEnEquipo: "jefe", destacado: false,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-05"),
+        solicitudesFormacion: []
       },
       {
         id: "al-06", nombre: "Ana Lucía Pérez", edad: 27, municipio: "Chimaltenango",
@@ -125,7 +215,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "intermedio", interesConstruccion: "alto", telefono: "5555-0106",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "asistente", equipoId: "eq-beta", rolEnEquipo: "asistente", destacado: false,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-06"),
+        solicitudesFormacion: []
       },
       {
         id: "al-07", nombre: "Diego Hernández", edad: 23, municipio: "Chimaltenango",
@@ -133,7 +224,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "inicial", interesConstruccion: "medio", telefono: "5555-0107",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "ayudante", equipoId: "eq-beta", rolEnEquipo: "ayudante", destacado: false,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-07"),
+        solicitudesFormacion: []
       },
       {
         id: "al-08", nombre: "Sara Cabrera", edad: 25, municipio: "Chimaltenango",
@@ -141,7 +233,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "inicial", interesConstruccion: "alto", telefono: "5555-0108",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "ayudante", equipoId: "eq-beta", rolEnEquipo: "ayudante", destacado: false,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-08"),
+        solicitudesFormacion: []
       },
       {
         id: "al-09", nombre: "Estuardo Chali", edad: 33, municipio: "Santa Apolonia",
@@ -149,7 +242,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "avanzado", interesConstruccion: "alto", telefono: "5555-0109",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "jefe", equipoId: "eq-gamma", rolEnEquipo: "jefe", destacado: false,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-09"),
+        solicitudesFormacion: []
       },
       {
         id: "al-10", nombre: "Wendy Sical", edad: 28, municipio: "Santa Apolonia",
@@ -157,7 +251,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "intermedio", interesConstruccion: "alto", telefono: "5555-0110",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
         potencial: "asistente", equipoId: "eq-gamma", rolEnEquipo: "asistente", destacado: false,
-        progresoModulos: progresoCompleto()
+        progresoModulos: progresoCompleto("al-10"),
+        solicitudesFormacion: []
       },
       {
         id: "al-11", nombre: "Byron Coy", edad: 20, municipio: "Santa Apolonia",
@@ -165,7 +260,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "inicial", interesConstruccion: "medio", telefono: "5555-0111",
         estadoDiagnostico: "completado", estadoFormacion: "en_curso", estadoCertificacion: "necesita_refuerzo",
         potencial: "ayudante", equipoId: "eq-gamma", rolEnEquipo: "ayudante", destacado: false,
-        progresoModulos: progresoParcial(7, "en_curso")
+        progresoModulos: progresoParcial("al-11", 7, "en_curso"),
+        solicitudesFormacion: []
       },
       {
         id: "al-12", nombre: "Elvia Tzoc", edad: 19, municipio: "San Martín Jilotepeque",
@@ -173,7 +269,8 @@ window.CANTERA = window.CANTERA || {};
         nivelExperiencia: "inicial", interesConstruccion: "alto", telefono: "5555-0112",
         estadoDiagnostico: "completado", estadoFormacion: "en_curso", estadoCertificacion: "en_formacion",
         potencial: "ayudante", equipoId: null, rolEnEquipo: null, destacado: false,
-        progresoModulos: progresoParcial(5, "en_curso")
+        progresoModulos: progresoParcial("al-12", 5, "en_curso"),
+        solicitudesFormacion: []
       }
     ],
 
@@ -456,12 +553,80 @@ window.CANTERA = window.CANTERA || {};
     return idx === -1 ? 0 : idx;
   }
 
+  function getCatalogoFormaciones() { return CATALOGO_FORMACIONES; }
+
+  function getSolicitud(alumno, cursoId) {
+    return (alumno.solicitudesFormacion || []).filter(function (s) { return s.cursoId === cursoId; })[0] || null;
+  }
+
+  function solicitarFormacion(data, alumnoId, cursoId) {
+    var alumno = getAlumno(data, alumnoId);
+    if (!alumno) return;
+    if (!alumno.solicitudesFormacion) alumno.solicitudesFormacion = [];
+    if (getSolicitud(alumno, cursoId)) return;
+    alumno.solicitudesFormacion.push({
+      cursoId: cursoId, estado: "solicitada",
+      fechaSolicitud: new Date().toISOString().slice(0, 10),
+      fechaActualizacion: new Date().toISOString().slice(0, 10),
+      nota: null
+    });
+    saveData(data);
+  }
+
+  function avanzarSolicitud(data, alumnoId, cursoId) {
+    var alumno = getAlumno(data, alumnoId);
+    if (!alumno) return null;
+    var s = getSolicitud(alumno, cursoId);
+    if (!s) return null;
+    if (s.estado === "solicitada") { s.estado = "en_curso"; }
+    else if (s.estado === "en_curso") { s.estado = "completada"; s.nota = notaModulo(alumnoId, cursoId); }
+    s.fechaActualizacion = new Date().toISOString().slice(0, 10);
+    saveData(data);
+    return s.estado;
+  }
+
+  function solicitudEstadoBadge(estado) {
+    var map = {
+      solicitada: { texto: "Solicitada", clase: "yellow" },
+      en_curso: { texto: "En curso", clase: "sky" },
+      completada: { texto: "Completada", clase: "green" }
+    };
+    return map[estado] || { texto: "Disponible", clase: "gray" };
+  }
+
+  function promedioNotas(alumno) {
+    var notas = alumno.progresoModulos
+      .filter(function (p) { return p.estado === "completado" && typeof p.nota === "number"; })
+      .map(function (p) { return p.nota; });
+    if (!notas.length) return null;
+    var suma = notas.reduce(function (a, b) { return a + b; }, 0);
+    return Math.round(suma / notas.length);
+  }
+
+  function horasCompletadas(alumno) {
+    var completados = alumno.progresoModulos
+      .filter(function (p) { return p.estado === "completado"; })
+      .map(function (p) { return p.moduloId; });
+    return MODULOS_FORMATIVOS
+      .filter(function (m) { return completados.indexOf(m.id) !== -1; })
+      .reduce(function (sum, m) { return sum + m.horas; }, 0);
+  }
+
+  function codigoCertificado(alumno) {
+    return "CC-2026-" + alumno.id.toUpperCase();
+  }
+
+  function codigoCertificadoEspecializacion(alumno, cursoId) {
+    return "CC-ESP-2026-" + alumno.id.toUpperCase() + "-" + cursoId.toUpperCase();
+  }
+
   /* API PÚBLICA ============================================ */
   window.CANTERA = {
     MODULOS_FORMATIVOS: MODULOS_FORMATIVOS,
     ETAPAS_OBRA: ETAPAS_OBRA,
     CRITERIOS_EVALUACION: CRITERIOS_EVALUACION,
     CRITERIOS_EXITO_PILOTO: CRITERIOS_EXITO_PILOTO,
+    CATALOGO_FORMACIONES: CATALOGO_FORMACIONES,
 
     loadData: loadData,
     saveData: saveData,
@@ -477,6 +642,17 @@ window.CANTERA = window.CANTERA || {};
     getAlumnosPorEquipo: getAlumnosPorEquipo,
     getEquipoDestacado: getEquipoDestacado,
     getAlumnoDestacado: getAlumnoDestacado,
+
+    notaModulo: notaModulo,
+    getCatalogoFormaciones: getCatalogoFormaciones,
+    getSolicitud: getSolicitud,
+    solicitarFormacion: solicitarFormacion,
+    avanzarSolicitud: avanzarSolicitud,
+    solicitudEstadoBadge: solicitudEstadoBadge,
+    promedioNotas: promedioNotas,
+    horasCompletadas: horasCompletadas,
+    codigoCertificado: codigoCertificado,
+    codigoCertificadoEspecializacion: codigoCertificadoEspecializacion,
 
     formatFecha: formatFecha,
     scoreCategoria: scoreCategoria,
