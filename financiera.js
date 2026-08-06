@@ -16,9 +16,11 @@
   document.addEventListener("DOMContentLoaded", function () {
     data = window.CANTERA.loadData();
 
+    bindTabs();
     renderKPIs();
     renderTablaObrasFin();
     renderRankingFin();
+    renderEntidades();
     renderSuccessList();
     populateSelectorObra();
 
@@ -37,6 +39,17 @@
       window.print();
     });
   });
+
+  function bindTabs() {
+    document.querySelectorAll(".tab-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+        document.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.remove("active"); });
+        btn.classList.add("active");
+        document.getElementById(btn.getAttribute("data-tab")).classList.add("active");
+      });
+    });
+  }
 
   function getSelectedObraId() {
     var stored = null;
@@ -92,6 +105,47 @@
     }).join("");
   }
 
+  function renderEntidades() {
+    var el = document.getElementById("entidades-grid");
+    el.innerHTML = data.entidadesFinancieras.map(function (ent) {
+      var obras = data.obras.filter(function (o) { return o.entidadFinancieraId === ent.id; });
+      var avance = obras.length
+        ? Math.round(obras.reduce(function (sum, o) { return sum + o.porcentajeAvance; }, 0) / obras.length)
+        : 0;
+      var bajo = obras.filter(function (o) { return o.estadoRiesgo === "bajo"; }).length;
+      var medio = obras.filter(function (o) { return o.estadoRiesgo === "medio"; }).length;
+      var alto = obras.filter(function (o) { return o.estadoRiesgo === "alto"; }).length;
+
+      var obrasHTML = obras.map(function (o) {
+        var riesgo = window.CANTERA.riesgoBadge(o.estadoRiesgo);
+        return (
+          '<div class="module-item">' +
+            '<div class="info"><h4>' + o.codigo + '</h4><p>' + o.ubicacion + " · Avance: " + o.porcentajeAvance + "%</p></div>" +
+            "<div>" + window.CANTERA_UI.badgeHTML(riesgo.texto, riesgo.clase) + "</div>" +
+          "</div>"
+        );
+      }).join("") || '<p class="text-sm text-mid mb-0">Sin obras asignadas todavía.</p>';
+
+      return (
+        '<div class="card">' +
+          '<div class="flex-between" style="margin-bottom:6px">' +
+            "<h3 style=\"color:var(--navy);margin-bottom:0\">" + ent.nombre + "</h3>" +
+            window.CANTERA_UI.badgeHTML(capitalize(ent.tipo), "sky") +
+          "</div>" +
+          '<p class="text-sm text-mid" style="margin-bottom:14px">' + ent.contacto + " · Aliado desde " + window.CANTERA.formatFecha(ent.fechaAlianza) + "</p>" +
+          '<div class="grid grid-3" style="margin-bottom:14px">' +
+            '<div><span class="text-sm text-mid">Obras</span><br><strong style="font-size:20px;color:var(--navy)">' + obras.length + "</strong></div>" +
+            '<div><span class="text-sm text-mid">Avance promedio</span><br><strong style="font-size:20px;color:var(--navy)">' + avance + "%</strong></div>" +
+            '<div><span class="text-sm text-mid">Riesgo</span><br>' +
+              '<span class="text-sm">' + bajo + " bajo · " + medio + " medio · " + alto + " alto</span>" +
+            "</div>" +
+          "</div>" +
+          obrasHTML +
+        "</div>"
+      );
+    }).join("");
+  }
+
   function populateSelectorObra() {
     document.getElementById("selector-obra-fin").innerHTML = data.obras.map(function (o) {
       return '<option value="' + o.id + '">' + o.codigo + " — " + o.ubicacion + "</option>";
@@ -141,6 +195,14 @@
       return "<li>" + c.label + ": " + (equipo.evaluacion[c.key] || 0) + "/" + c.max + "</li>";
     }).join("");
 
+    var entidadesHTML = data.entidadesFinancieras.map(function (ent) {
+      var obras = data.obras.filter(function (o) { return o.entidadFinancieraId === ent.id; });
+      var avance = obras.length
+        ? Math.round(obras.reduce(function (sum, o) { return sum + o.porcentajeAvance; }, 0) / obras.length)
+        : 0;
+      return "<li>" + ent.nombre + ": " + obras.length + " obra(s), avance promedio " + avance + "%</li>";
+    }).join("");
+
     document.getElementById("reporte-imprimible").innerHTML =
       "<h1>Reporte ejecutivo — Cantera Construcción</h1>" +
       "<p>Generado: " + fechaGeneracion + " · Prototipo v1, Fase 1 (datos de ejemplo)</p>" +
@@ -152,6 +214,8 @@
       "<ul>" + criteriosHTML + "</ul>" +
       "<h3>Bitácora</h3>" +
       "<p>" + entradas.length + " entrada(s) registradas. Última: " + (entradas[0] ? window.CANTERA.formatFecha(entradas[0].fecha) + " — " + entradas[0].descripcion : "sin registros") + "</p>" +
+      "<h3>Desglose por entidad financiera</h3>" +
+      "<ul>" + entidadesHTML + "</ul>" +
       "<h3>Criterios de éxito del piloto (objetivo a validar)</h3>" +
       "<ul>" + window.CANTERA.CRITERIOS_EXITO_PILOTO.map(function (c) { return "<li>" + c + "</li>"; }).join("") + "</ul>";
   }
@@ -159,5 +223,10 @@
   function setText(id, value) {
     var el = document.getElementById(id);
     if (el) el.textContent = value;
+  }
+
+  function capitalize(s) {
+    if (!s) return "";
+    return s.charAt(0).toUpperCase() + s.slice(1);
   }
 })();
