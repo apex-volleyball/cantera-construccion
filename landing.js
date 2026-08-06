@@ -31,6 +31,12 @@ document.addEventListener("DOMContentLoaded", function () {
       featuredEquipo.calificacionActual + "/100 — categoría " + cat.letra + ", " + cat.desc.toLowerCase() + "."
   );
 
+  /* --- Vistas previas de la plataforma (Nosotros / Plataforma) --- */
+  renderPreviewAlumno(featuredAlumno);
+  renderPreviewJefe(data, featuredEquipo, featuredObra);
+  renderPreviewAdmin(data);
+  renderPreviewFinanciera(data, featuredObra);
+
   /* --- Criterios de éxito del piloto --- */
   var successList = document.getElementById("success-list");
   if (successList) {
@@ -107,6 +113,60 @@ document.addEventListener("DOMContentLoaded", function () {
     form.style.display = "none";
     var success = document.getElementById("piloto-success");
     if (success) success.style.display = "block";
+  }
+
+  function renderPreviewAlumno(alumno) {
+    var el = document.getElementById("prev-alumno");
+    if (!el || !alumno) return;
+    var horas = window.CANTERA.horasCompletadas(alumno);
+    var nota = window.CANTERA.promedioNotas(alumno);
+    el.innerHTML =
+      '<div class="avatar sm" style="margin-bottom:10px">' + window.CANTERA_UI.initialsFromName(alumno.nombre) + "</div>" +
+      '<div style="font-weight:700;color:var(--navy);font-size:14px;text-align:center;margin-bottom:10px">' + alumno.nombre + "</div>" +
+      '<div class="mini-kpi-row">' +
+        '<div class="mini-kpi"><div class="num">' + horas + 'h</div><div class="label">Formación</div></div>' +
+        '<div class="mini-kpi"><div class="num">' + (nota !== null ? nota : "—") + '</div><div class="label">Nota promedio</div></div>' +
+      "</div>";
+  }
+
+  function renderPreviewJefe(dataObj, equipo, obra) {
+    var el = document.getElementById("prev-jefe");
+    if (!el || !equipo || !obra) return;
+    var incidencias = window.CANTERA.getIncidenciasPorObra(dataObj, obra.id);
+    var abiertas = incidencias.filter(function (i) { return i.estado === "abierta"; }).length;
+    var badge = abiertas > 0
+      ? window.CANTERA_UI.badgeHTML(abiertas + " incidencia" + (abiertas > 1 ? "s" : "") + " abierta" + (abiertas > 1 ? "s" : ""), "yellow")
+      : window.CANTERA_UI.badgeHTML("Sin incidencias abiertas", "green");
+    el.innerHTML =
+      window.CANTERA_UI.scoreRingHTML(equipo.calificacionActual, { small: true }) +
+      '<div style="font-weight:700;color:var(--navy);font-size:14px;text-align:center">' + equipo.nombre + "</div>" +
+      badge;
+  }
+
+  function renderPreviewAdmin(dataObj) {
+    var el = document.getElementById("prev-admin");
+    if (!el) return;
+    var ordenado = dataObj.equipos.slice().sort(function (a, b) { return b.calificacionActual - a.calificacionActual; });
+    var items = ordenado.map(function (eq) {
+      var cat = window.CANTERA.scoreCategoria(eq.calificacionActual);
+      return { label: eq.codigo, value: eq.calificacionActual, max: 100, clase: cat.clase === "sky" ? "" : cat.clase };
+    });
+    el.innerHTML = window.CANTERA_UI.barChartHTML(items);
+  }
+
+  function renderPreviewFinanciera(dataObj, obra) {
+    var el = document.getElementById("prev-financiera");
+    if (!el || !obra) return;
+    var entradas = window.CANTERA.getBitacoraPorObra(dataObj, obra.id).slice().sort(function (a, b) { return new Date(a.fecha) - new Date(b.fecha); });
+    var points = entradas.map(function (b) {
+      return { x: window.CANTERA.formatFecha(b.fecha), y: b.porcentajeAvanceReportado };
+    });
+    var liberado = window.CANTERA.montoLiberado(obra);
+    el.innerHTML =
+      '<div class="mini-kpi-row" style="margin-bottom:10px">' +
+        '<div class="mini-kpi"><div class="num">' + window.CANTERA.formatQ(liberado) + '</div><div class="label">Liberado en ' + obra.codigo + '</div></div>' +
+      "</div>" +
+      window.CANTERA_UI.lineChartHTML(points);
   }
 
   function setText(id, value) {
