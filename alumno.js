@@ -276,7 +276,7 @@
       var solicitud = window.CANTERA.getSolicitud(alumno, curso.id);
       var estado = solicitud ? solicitud.estado : null;
       var costoTexto = curso.costoQ === 0 ? "Cubierto por Cantera" : "Q" + curso.costoQ;
-      var icono = window.CANTERA_UI.ICONS[curso.icono] || window.CANTERA_UI.ICONS.doc;
+      var caratula = window.CANTERA_UI.caratulaHTML(curso.icono, curso.caratula);
 
       var footerHTML;
       if (!elegible) {
@@ -293,13 +293,15 @@
 
       return (
         '<div class="course-card">' +
-          '<div class="course-head">' +
-            '<div class="course-icon">' + icono + "</div>" +
-            "<div><h4>" + curso.nombre + '</h4><div class="course-meta">' + curso.categoria + "</div></div>" +
+          caratula +
+          '<div class="course-body">' +
+            '<div class="course-head">' +
+              "<div><h4>" + curso.nombre + '</h4><div class="course-meta">' + curso.categoria + "</div></div>" +
+            "</div>" +
+            '<p class="course-desc">' + curso.descripcion + "</p>" +
+            '<p class="course-meta mb-0">' + curso.horas + "h · " + capitalize(curso.modalidad) + " · " + costoTexto + "</p>" +
+            '<div class="course-footer">' + footerHTML + "</div>" +
           "</div>" +
-          '<p class="course-desc">' + curso.descripcion + "</p>" +
-          '<p class="course-meta mb-0">' + curso.horas + "h · " + capitalize(curso.modalidad) + " · " + costoTexto + "</p>" +
-          '<div class="course-footer">' + footerHTML + "</div>" +
         "</div>"
       );
     }).join("");
