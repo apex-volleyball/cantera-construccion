@@ -201,9 +201,21 @@ window.CANTERA = window.CANTERA || {};
       { id: "ef-02", nombre: "Fundación Vivienda Digna", tipo: "aliado", contacto: "Coordinación de Proyectos", fechaAlianza: "2026-04-12" }
     ],
 
+    tutores: [
+      { id: "tu-01", nombre: "Marta Elena Sical", especialidad: "Psicóloga educativa",
+        bio: "Acompaña el proceso emocional y motivacional de los alumnos, ayudándolos a sostener el ritmo de formación y resolver bloqueos personales.",
+        capacidadMaxima: 70, colorAvatar: "sky" },
+      { id: "tu-02", nombre: "Luis Fernando Ordóñez", especialidad: "Pedagogo",
+        bio: "Ayuda a los alumnos a organizar su tiempo de estudio y a encontrar la forma de aprender que mejor se adapta a su ritmo.",
+        capacidadMaxima: 70, colorAvatar: "green" },
+      { id: "tu-03", nombre: "Claudia Beatriz Morales", especialidad: "Trabajadora social",
+        bio: "Apoya a los alumnos en temas prácticos y de bienestar durante su proceso de formación, y los conecta con el recurso correcto en cada momento.",
+        capacidadMaxima: 70, colorAvatar: "navy" }
+    ],
+
     alumnos: [
       {
-        id: "al-01", nombre: "Juan Carlos Morales Xoc", edad: 26, municipio: "San Juan Sacatepéquez",
+        id: "al-01", tutorId: "tu-01", nombre: "Juan Carlos Morales Xoc", edad: 26, municipio: "San Juan Sacatepéquez",
         experienciaPrevia: "4 años como albañil informal", disponibilidad: "completa", rolDeseado: "jefe de grupo",
         nivelExperiencia: "avanzado", interesConstruccion: "alto", telefono: "5555-0101",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -212,7 +224,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-02", nombre: "María Fernanda Us", edad: 24, municipio: "San Juan Sacatepéquez",
+        id: "al-02", tutorId: "tu-01", nombre: "María Fernanda Us", edad: 24, municipio: "San Juan Sacatepéquez",
         experienciaPrevia: "1 año en acabados", disponibilidad: "completa", rolDeseado: "asistente",
         nivelExperiencia: "intermedio", interesConstruccion: "alto", telefono: "5555-0102",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -221,7 +233,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-03", nombre: "Pedro Tzul", edad: 22, municipio: "San Juan Sacatepéquez",
+        id: "al-03", tutorId: "tu-01", nombre: "Pedro Tzul", edad: 22, municipio: "San Juan Sacatepéquez",
         experienciaPrevia: "Sin experiencia previa", disponibilidad: "completa", rolDeseado: "ayudante",
         nivelExperiencia: "inicial", interesConstruccion: "alto", telefono: "5555-0103",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -230,7 +242,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-04", nombre: "Carlos Ramírez", edad: 29, municipio: "Mixco",
+        id: "al-04", tutorId: "tu-01", nombre: "Carlos Ramírez", edad: 29, municipio: "Mixco",
         experienciaPrevia: "2 años en obra gris", disponibilidad: "completa", rolDeseado: "ayudante",
         nivelExperiencia: "intermedio", interesConstruccion: "medio", telefono: "5555-0104",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -239,7 +251,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-05", nombre: "Marvin Osorio", edad: 31, municipio: "Chimaltenango",
+        id: "al-05", tutorId: "tu-02", nombre: "Marvin Osorio", edad: 31, municipio: "Chimaltenango",
         experienciaPrevia: "5 años como maestro de obra", disponibilidad: "completa", rolDeseado: "jefe de grupo",
         nivelExperiencia: "avanzado", interesConstruccion: "alto", telefono: "5555-0105",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -248,7 +260,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-06", nombre: "Ana Lucía Pérez", edad: 27, municipio: "Chimaltenango",
+        id: "al-06", tutorId: "tu-02", nombre: "Ana Lucía Pérez", edad: 27, municipio: "Chimaltenango",
         experienciaPrevia: "1 año en acabados", disponibilidad: "completa", rolDeseado: "asistente",
         nivelExperiencia: "intermedio", interesConstruccion: "alto", telefono: "5555-0106",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -257,7 +269,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-07", nombre: "Diego Hernández", edad: 23, municipio: "Chimaltenango",
+        id: "al-07", tutorId: "tu-02", nombre: "Diego Hernández", edad: 23, municipio: "Chimaltenango",
         experienciaPrevia: "Sin experiencia previa", disponibilidad: "parcial", rolDeseado: "ayudante",
         nivelExperiencia: "inicial", interesConstruccion: "medio", telefono: "5555-0107",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -266,7 +278,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-08", nombre: "Sara Cabrera", edad: 25, municipio: "Chimaltenango",
+        id: "al-08", tutorId: "tu-02", nombre: "Sara Cabrera", edad: 25, municipio: "Chimaltenango",
         experienciaPrevia: "Sin experiencia previa", disponibilidad: "completa", rolDeseado: "ayudante",
         nivelExperiencia: "inicial", interesConstruccion: "alto", telefono: "5555-0108",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -275,7 +287,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-09", nombre: "Estuardo Chali", edad: 33, municipio: "Santa Apolonia",
+        id: "al-09", tutorId: "tu-03", nombre: "Estuardo Chali", edad: 33, municipio: "Santa Apolonia",
         experienciaPrevia: "6 años de experiencia informal", disponibilidad: "completa", rolDeseado: "jefe de grupo",
         nivelExperiencia: "avanzado", interesConstruccion: "alto", telefono: "5555-0109",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -284,7 +296,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-10", nombre: "Wendy Sical", edad: 28, municipio: "Santa Apolonia",
+        id: "al-10", tutorId: "tu-03", nombre: "Wendy Sical", edad: 28, municipio: "Santa Apolonia",
         experienciaPrevia: "1 año en acabados", disponibilidad: "completa", rolDeseado: "asistente",
         nivelExperiencia: "intermedio", interesConstruccion: "alto", telefono: "5555-0110",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
@@ -293,7 +305,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-11", nombre: "Byron Coy", edad: 20, municipio: "Santa Apolonia",
+        id: "al-11", tutorId: "tu-03", nombre: "Byron Coy", edad: 20, municipio: "Santa Apolonia",
         experienciaPrevia: "Sin experiencia previa", disponibilidad: "completa", rolDeseado: "ayudante",
         nivelExperiencia: "inicial", interesConstruccion: "medio", telefono: "5555-0111",
         estadoDiagnostico: "completado", estadoFormacion: "en_curso", estadoCertificacion: "necesita_refuerzo",
@@ -302,7 +314,7 @@ window.CANTERA = window.CANTERA || {};
         solicitudesFormacion: []
       },
       {
-        id: "al-12", nombre: "Elvia Tzoc", edad: 19, municipio: "San Martín Jilotepeque",
+        id: "al-12", tutorId: "tu-03", nombre: "Elvia Tzoc", edad: 19, municipio: "San Martín Jilotepeque",
         experienciaPrevia: "Sin experiencia previa", disponibilidad: "completa", rolDeseado: "ayudante",
         nivelExperiencia: "inicial", interesConstruccion: "alto", telefono: "5555-0112",
         estadoDiagnostico: "completado", estadoFormacion: "en_curso", estadoCertificacion: "en_formacion",
@@ -445,6 +457,27 @@ window.CANTERA = window.CANTERA || {};
         descripcion: "Se detectó a un ayudante sin casco durante la excavación de zapatas.",
         severidad: "baja", estado: "resuelta",
         resolucion: "Se reforzó el uso obligatorio de equipo de protección personal y se realizó una charla de seguridad de 30 minutos con todo el equipo." }
+    ],
+
+    mensajesTutoria: [
+      { id: "mt-01", alumnoId: "al-01", tutorId: "tu-01", autor: "alumno",
+        texto: "Hola, ¿puedo ver mi certificado desde el celular o solo desde computadora?",
+        fecha: "2026-08-01", leido: true },
+      { id: "mt-02", alumnoId: "al-01", tutorId: "tu-01", autor: "tutor",
+        texto: "¡Hola Juan Carlos! Sí, puedes verlo y descargarlo desde cualquier navegador, incluido tu celular, en la pestaña Certificados.",
+        fecha: "2026-08-01", leido: false },
+      { id: "mt-03", alumnoId: "al-11", tutorId: "tu-03", autor: "alumno",
+        texto: "Mi evaluación dice que necesito refuerzo pero no sé bien en qué. ¿Me puede orientar?",
+        fecha: "2026-08-03", leido: false }
+    ],
+
+    mensajesDirectivos: [
+      { id: "md-01", tutorId: "tu-01", de: "Administración Cantera", asunto: "Resumen mensual de seguimiento",
+        texto: "Por favor envía tu resumen de seguimiento de julio antes del viernes.",
+        fecha: "2026-07-28", leido: false },
+      { id: "md-02", tutorId: "tu-03", de: "Administración Cantera", asunto: "Nuevo alumno asignado",
+        texto: "Se te ha asignado un nuevo alumno: Elvia Tzoc, actualmente sin equipo.",
+        fecha: "2026-08-02", leido: false }
     ]
   };
 
@@ -504,6 +537,7 @@ window.CANTERA = window.CANTERA || {};
   function getEquipo(data, id) { return byId(data.equipos, id); }
   function getObra(data, id) { return byId(data.obras, id); }
   function getEntidad(data, id) { return byId(data.entidadesFinancieras, id); }
+  function getTutor(data, id) { return byId(data.tutores, id); }
 
   function getBitacoraPorObra(data, obraId) {
     return data.bitacora.filter(function (b) { return b.obraId === obraId; })
@@ -718,6 +752,77 @@ window.CANTERA = window.CANTERA || {};
     return "Q " + withCommas;
   }
 
+  /* 6. TUTORÍA Y MENSAJERÍA ================================ */
+
+  function getTutorDeAlumno(data, alumnoId) {
+    var al = getAlumno(data, alumnoId);
+    return al && al.tutorId ? getTutor(data, al.tutorId) : null;
+  }
+
+  function getAlumnosDeTutor(data, tutorId) {
+    return data.alumnos.filter(function (a) { return a.tutorId === tutorId; });
+  }
+
+  function getHiloTutoria(data, alumnoId) {
+    return (data.mensajesTutoria || [])
+      .filter(function (m) { return m.alumnoId === alumnoId; })
+      .sort(function (a, b) { return new Date(a.fecha) - new Date(b.fecha); });
+  }
+
+  function enviarMensajeTutoria(data, alumnoId, tutorId, autor, texto) {
+    if (!data.mensajesTutoria) data.mensajesTutoria = [];
+    data.mensajesTutoria.push({
+      id: "mt-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+      alumnoId: alumnoId, tutorId: tutorId, autor: autor, texto: texto,
+      fecha: new Date().toISOString().slice(0, 10), leido: false
+    });
+    saveData(data);
+  }
+
+  function marcarHiloLeido(data, alumnoId, porQuien) {
+    var autorOpuesto = porQuien === "alumno" ? "tutor" : "alumno";
+    (data.mensajesTutoria || []).forEach(function (m) {
+      if (m.alumnoId === alumnoId && m.autor === autorOpuesto) m.leido = true;
+    });
+    saveData(data);
+  }
+
+  function contarNoLeidosAlumno(data, alumnoId) {
+    return (data.mensajesTutoria || []).filter(function (m) {
+      return m.alumnoId === alumnoId && m.autor === "tutor" && !m.leido;
+    }).length;
+  }
+
+  function getDudasPendientesTutor(data, tutorId) {
+    var alumnos = getAlumnosDeTutor(data, tutorId);
+    var pendientes = [];
+    alumnos.forEach(function (al) {
+      var hilo = getHiloTutoria(data, al.id);
+      if (hilo.length && hilo[hilo.length - 1].autor === "alumno") {
+        pendientes.push({ alumno: al, ultimoMensaje: hilo[hilo.length - 1] });
+      }
+    });
+    return pendientes;
+  }
+
+  function getMensajesDirectivos(data, tutorId) {
+    return (data.mensajesDirectivos || []).filter(function (m) { return m.tutorId === tutorId; });
+  }
+
+  function getNotificacionesTutor(data, tutorId) {
+    var alumnos = getAlumnosDeTutor(data, tutorId);
+    var out = [];
+    alumnos.forEach(function (al) {
+      if (al.estadoCertificacion === "necesita_refuerzo") {
+        out.push({ texto: al.nombre + " necesita refuerzo en su evaluación.", alumnoId: al.id, clase: "yellow" });
+      }
+      if (al.estadoCertificacion === "certificado" && !al.equipoId) {
+        out.push({ texto: al.nombre + " ya está certificado y disponible para equipo.", alumnoId: al.id, clase: "sky" });
+      }
+    });
+    return out;
+  }
+
   /* API PÚBLICA ============================================ */
   window.CANTERA = {
     MODULOS_FORMATIVOS: MODULOS_FORMATIVOS,
@@ -736,6 +841,7 @@ window.CANTERA = window.CANTERA || {};
     getEquipo: getEquipo,
     getObra: getObra,
     getEntidad: getEntidad,
+    getTutor: getTutor,
     getBitacoraPorObra: getBitacoraPorObra,
     getIncidenciasPorObra: getIncidenciasPorObra,
     getAlumnosPorEquipo: getAlumnosPorEquipo,
@@ -762,6 +868,16 @@ window.CANTERA = window.CANTERA || {};
     getDesembolsosPendientes: getDesembolsosPendientes,
     desembolsoEstadoBadge: desembolsoEstadoBadge,
     formatQ: formatQ,
+
+    getTutorDeAlumno: getTutorDeAlumno,
+    getAlumnosDeTutor: getAlumnosDeTutor,
+    getHiloTutoria: getHiloTutoria,
+    enviarMensajeTutoria: enviarMensajeTutoria,
+    marcarHiloLeido: marcarHiloLeido,
+    contarNoLeidosAlumno: contarNoLeidosAlumno,
+    getDudasPendientesTutor: getDudasPendientesTutor,
+    getMensajesDirectivos: getMensajesDirectivos,
+    getNotificacionesTutor: getNotificacionesTutor,
 
     formatFecha: formatFecha,
     scoreCategoria: scoreCategoria,
