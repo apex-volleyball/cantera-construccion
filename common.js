@@ -43,7 +43,9 @@ window.CANTERA_UI = window.CANTERA_UI || {};
     esmeriladora: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="9" width="9" height="5" rx="1"/><path d="M13 11.5h3"/><circle cx="18" cy="15" r="4"/></svg>',
     clavadora: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h9v5H4z"/><path d="M13 10h4v3h-4z"/><path d="M8 14v6"/><path d="M6 20h4"/></svg>',
     nivelLaser: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="10" width="6" height="6" rx="1"/><path d="M15 13h6" stroke-dasharray="2 2"/><path d="M9 13H3" stroke-dasharray="2 2"/><path d="M12 16v5"/><path d="M9 21h6"/></svg>',
-    multiherramienta: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="10" height="5" rx="1"/><path d="M13 11.5h6"/><path d="M15 10l1 1.5-1 1.5"/><path d="M18 10l1 1.5-1 1.5"/></svg>'
+    multiherramienta: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="10" height="5" rx="1"/><path d="M13 11.5h6"/><path d="M15 10l1 1.5-1 1.5"/><path d="M18 10l1 1.5-1 1.5"/></svg>',
+    inbox: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h4l2 3h4l2-3h4"/><path d="M4 12V6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6"/><path d="M4 12v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-6"/></svg>',
+    mentor: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 3-6 6-6s6 2.5 6 6"/><path d="M16 6h5v4h-2l-1.5 2V10H16z"/></svg>'
   };
 
   function caratulaHTML(iconKey, colorKey) {
@@ -182,10 +184,15 @@ window.CANTERA_UI = window.CANTERA_UI || {};
     });
     var incidenciasAbiertas = data.incidencias.filter(function (i) { return i.estado === "abierta"; }).length;
     var desembolsosPendientes = window.CANTERA.getDesembolsosPendientes(data).length;
+    var dudasPendientesTutoria = 0;
+    (data.tutores || []).forEach(function (t) {
+      dudasPendientesTutoria += window.CANTERA.getDudasPendientesTutor(data, t.id).length;
+    });
     return {
       "admin.html": solicitudesPendientes + incidenciasAbiertas,
       "jefe.html": incidenciasAbiertas,
-      "financiera.html": desembolsosPendientes
+      "financiera.html": desembolsosPendientes,
+      "tutor.html": dudasPendientesTutoria
     };
   }
 
