@@ -302,6 +302,15 @@
     }
   }
 
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function renderBuzonTab(data, alumno) {
     var tutor = window.CANTERA.getTutorDeAlumno(data, alumno.id);
     var lista = document.getElementById("conversacion-lista");
