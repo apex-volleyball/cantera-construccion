@@ -114,15 +114,17 @@
       var pct = window.CANTERA.progresoFormativoPct(al);
       var cert = window.CANTERA.certificacionBadge(al.estadoCertificacion);
       var equipo = al.equipoId ? window.CANTERA.getEquipo(data, al.equipoId) : null;
+      var obra = equipo && equipo.obraId ? window.CANTERA.getObra(data, equipo.obraId) : null;
       var promedio = window.CANTERA.promedioNotas(al);
       var iniciales = window.CANTERA_UI.initialsFromName(al.nombre);
       return (
         '<div class="alumno-tutor-card">' +
           '<div class="alumno-tutor-card-head">' +
             '<div class="avatar sm">' + iniciales + "</div>" +
-            '<div style="flex:1"><h4>' + al.nombre + '</h4><p class="text-sm text-mid mb-0">' + al.municipio + (equipo ? " · " + equipo.nombre : " · Sin equipo") + "</p></div>" +
+            '<div style="flex:1"><h4>' + al.nombre + '</h4><p class="text-sm text-mid mb-0">' + al.municipio + (equipo ? " · " + equipo.nombre + " (" + window.CANTERA.rolEquipoLabel(al.rolEnEquipo) + ")" : " · Sin equipo asignado") + "</p></div>" +
             window.CANTERA_UI.badgeHTML(cert.texto, cert.clase) +
           "</div>" +
+          (obra ? '<p class="text-sm text-mid mb-4">Obra: ' + obra.ubicacion + " — " + obra.etapaActual + " (" + obra.porcentajeAvance + "% de avance)</p>" : "") +
           window.CANTERA_UI.progressRowHTML(pct, pct === 100 ? "green" : "") +
           '<p class="text-sm text-mid mt-8 mb-0">Nota promedio: ' + (promedio !== null ? promedio : "—") + ' · <a href="#" data-ver-buzon="' + al.id + '">Ver dudas pendientes →</a></p>' +
         "</div>"
