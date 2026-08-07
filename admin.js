@@ -24,6 +24,7 @@
     renderSuccessList();
     renderSolicitudes();
     renderCertificados();
+    renderMapa();
 
     document.getElementById("buscador-alumnos").addEventListener("input", function (e) {
       renderTablaAlumnos(e.target.value.toLowerCase());
@@ -376,5 +377,96 @@
   function capitalize(s) {
     if (!s) return "";
     return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+
+  function renderMapa() {
+    var conteo = window.CANTERA.getConteoPorDepartamento(data);
+    var valores = Object.keys(conteo).map(function (k) { return conteo[k]; });
+    var maxCount = valores.length ? Math.max.apply(null, valores) : 0;
+
+    document.querySelectorAll(".gt-dep").forEach(function (path) {
+      var count = conteo[path.id] || 0;
+      path.classList.remove("nivel-1", "nivel-2", "nivel-3", "nivel-4", "nivel-5", "sin-datos");
+      if (count === 0) {
+        path.classList.add("sin-datos");
+      } else {
+        path.classList.add("nivel-" + nivelDeConteo(count, maxCount));
+      }
+    });
+
+    bindMapaEventos(conteo);
+    renderPanelVacio();
+  }
+
+  function nivelDeConteo(count, max) {
+    if (max <= 1) return count > 0 ? 3 : 0;
+    var pct = count / max;
+    if (pct <= 0.2) return 1;
+    if (pct <= 0.45) return 2;
+    if (pct <= 0.7) return 3;
+    if (pct <= 0.9) return 4;
+    return 5;
+  }
+
+  function bindMapaEventos(conteo) {
+    var tooltip = document.getElementById("mapa-tooltip");
+    document.querySelectorAll(".gt-dep").forEach(function (path) {
+      path.addEventListener("mouseenter", function () {
+        var nombre = path.getAttribute("data-dep");
+        var count = conteo[path.id] || 0;
+        tooltip.innerHTML = "<strong>" + nombre + "</strong><span>" + count + (count === 1 ? " persona" : " personas") + "</span>";
+        tooltip.classList.add("visible");
+      });
+      path.addEventListener("mousemove", function (e) {
+        tooltip.style.left = (e.clientX + 16) + "px";
+        tooltip.style.top = (e.clientY + 16) + "px";
+      });
+      path.addEventListener("mouseleave", function () {
+        tooltip.classList.remove("visible");
+      });
+      path.addEventListener("click", function () {
+        document.querySelectorAll(".gt-dep").forEach(function (p) { p.classList.remove("is-selected"); });
+        path.classList.add("is-selected");
+        renderPanelDepartamento(path.id, path.getAttribute("data-dep"));
+      });
+    });
+  }
+
+  function renderPanelVacio() {
+    document.getElementById("mapa-panel").innerHTML =
+      '<div class="mapa-panel-empty">' +
+        window.CANTERA_UI.ICONS.mapPin +
+        "<p>Selecciona una región del mapa para ver las personas de Cantera registradas ahí.</p>" +
+      "</div>";
+  }
+
+  function renderPanelDepartamento(depId, nombre) {
+    var personas = window.CANTERA.getPersonasPorDepartamento(data, depId);
+    var panel = document.getElementById("mapa-panel");
+    if (!personas.length) {
+      panel.innerHTML =
+        '<div class="mapa-panel-header"><h3>' + nombre + '</h3><div class="mapa-panel-count">Sin personas registradas todavía</div></div>' +
+        '<div class="mapa-panel-empty">' + window.CANTERA_UI.ICONS.mapPin + "<p>Cantera todavía no tiene alumnos activos en " + nombre + ". Este departamento está listo para su próxima expansión.</p></div>";
+      return;
+    }
+    panel.innerHTML =
+      '<div class="mapa-panel-header"><h3>' + nombre + '</h3><div class="mapa-panel-count">' + personas.length + (personas.length === 1 ? " persona registrada" : " personas registradas") + "</div></div>" +
+      '<div class="mapa-panel-list">' +
+        personas.map(function (p) {
+          var iniciales = window.CANTERA_UI.initialsFromName(p.nombre);
+          var cert = window.CANTERA.certificacionBadge(p.estadoCertificacion);
+          return (
+            '<div class="mapa-persona-card">' +
+              '<div class="avatar sm">' + iniciales + "</div>" +
+              '<div class="info">' +
+                "<h4>" + p.nombre + "</h4>" +
+                "<p>" + p.municipio + " · " + (p.rolDeseado || "sin rol definido") + "</p>" +
+              "</div>" +
+              window.CANTERA_UI.badgeHTML(cert.texto, cert.clase) +
+            "</div>"
+          );
+        }).join("") +
+      "</div>";
   }
 })();
