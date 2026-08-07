@@ -498,12 +498,46 @@ window.CANTERA = window.CANTERA || {};
       return fresh;
     }
     try {
-      return JSON.parse(raw);
+      var parsed = JSON.parse(raw);
+      if (migrarDatosTutoria(parsed)) saveData(parsed);
+      return parsed;
     } catch (e) {
       var fallback = cloneSeed();
       saveData(fallback);
       return fallback;
     }
+  }
+
+  function migrarDatosTutoria(data) {
+    var changed = false;
+    if (!data.tutores) {
+      data.tutores = cloneSeed().tutores;
+      changed = true;
+    }
+    if (!data.mensajesTutoria) {
+      data.mensajesTutoria = [];
+      changed = true;
+    }
+    if (!data.mensajesDirectivos) {
+      data.mensajesDirectivos = [];
+      changed = true;
+    }
+    if (data.alumnos) {
+      var faltaTutorId = data.alumnos.some(function (a) { return !a.tutorId; });
+      if (faltaTutorId) {
+        var seedAlumnos = cloneSeed().alumnos;
+        data.alumnos.forEach(function (a) {
+          if (!a.tutorId) {
+            var seedMatch = seedAlumnos.filter(function (s) { return s.id === a.id; })[0];
+            if (seedMatch && seedMatch.tutorId) {
+              a.tutorId = seedMatch.tutorId;
+              changed = true;
+            }
+          }
+        });
+      }
+    }
+    return changed;
   }
 
   function storageAvailable() {
