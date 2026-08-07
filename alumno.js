@@ -47,6 +47,12 @@
         document.querySelectorAll(".tab-panel").forEach(function (p) { p.classList.remove("active"); });
         btn.classList.add("active");
         document.getElementById(btn.getAttribute("data-tab")).classList.add("active");
+        if (btn.getAttribute("data-tab") === "tab-buzon") {
+          var data = window.CANTERA.loadData();
+          var alumnoId = document.getElementById("selector-alumno").value;
+          window.CANTERA.marcarHiloLeido(data, alumnoId, "alumno");
+          updateBuzonBadge(data, window.CANTERA.getAlumno(data, alumnoId));
+        }
       });
     });
   }
@@ -79,6 +85,8 @@
     renderCatalogo(data, alumno);
     renderEvaluacion(alumno);
     renderCertificados(data, alumno);
+    renderTutorTab(data, alumno);
+    renderBuzonTab(data, alumno);
   }
 
   /* 2. PERFIL / ESTADO / RESUMEN =========================== */
@@ -260,6 +268,84 @@
       return h + "h" + (m ? " " + m + "min" : "");
     }
     return min + " min";
+  }
+
+  /* 3.5 MI TUTOR Y BUZÓN =================================== */
+
+  function renderTutorTab(data, alumno) {
+    var tutor = window.CANTERA.getTutorDeAlumno(data, alumno.id);
+    var el = document.getElementById("tutor-info-card");
+    if (!tutor) {
+      el.innerHTML = '<div class="card"><p class="text-sm text-mid mb-0">Aún no tienes un tutor asignado. Cantera te asignará uno pronto.</p></div>';
+      return;
+    }
+    var iniciales = window.CANTERA_UI.initialsFromName(tutor.nombre);
+    el.innerHTML =
+      '<div class="tutor-card">' +
+        '<div class="avatar">' + iniciales + "</div>" +
+        '<div class="tutor-card-info">' +
+          "<h3>" + tutor.nombre + "</h3>" +
+          '<div class="tutor-card-especialidad">' + tutor.especialidad + "</div>" +
+          '<p class="tutor-card-bio">' + tutor.bio + "</p>" +
+          '<button class="btn btn-primary btn-sm no-print" id="btn-escribir-tutor">Escribir a mi tutor</button>' +
+        "</div>" +
+      "</div>";
+
+    var btnEscribir = document.getElementById("btn-escribir-tutor");
+    if (btnEscribir) {
+      btnEscribir.addEventListener("click", function () {
+        var buzonBtn = document.querySelector('.tab-btn[data-tab="tab-buzon"]');
+        if (buzonBtn) buzonBtn.click();
+        var input = document.getElementById("conv-input");
+        if (input) input.focus();
+      });
+    }
+  }
+
+  function renderBuzonTab(data, alumno) {
+    var tutor = window.CANTERA.getTutorDeAlumno(data, alumno.id);
+    var lista = document.getElementById("conversacion-lista");
+    var hilo = window.CANTERA.getHiloTutoria(data, alumno.id);
+
+    if (!hilo.length) {
+      lista.innerHTML = '<p class="conv-empty">Aún no tienes mensajes con tu tutor' + (tutor ? "" : " porque no tienes tutor asignado todavía") + '. Escríbele tu primera duda abajo.</p>';
+    } else {
+      lista.innerHTML = hilo.map(function (m) {
+        var cls = m.autor === "tutor" ? "conv-msg-tutor" : "conv-msg-alumno";
+        var autorLabel = m.autor === "tutor" ? (tutor ? tutor.nombre.split(" ")[0] : "Tutor") : "Tú";
+        return '<div class="conv-msg ' + cls + '">' + escapeHtml(m.texto) +
+          '<span class="conv-msg-meta">' + autorLabel + " · " + window.CANTERA.formatFecha(m.fecha) + "</span></div>";
+      }).join("");
+    }
+    lista.scrollTop = lista.scrollHeight;
+
+    updateBuzonBadge(data, alumno);
+
+    var form = document.getElementById("conv-form");
+    var input = document.getElementById("conv-input");
+    if (form && !form.dataset.bound) {
+      form.dataset.bound = "1";
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var texto = input.value.trim();
+        var tutorActual = window.CANTERA.getTutorDeAlumno(data, alumno.id);
+        if (!texto || !tutorActual) return;
+        window.CANTERA.enviarMensajeTutoria(data, alumno.id, tutorActual.id, "alumno", texto);
+        input.value = "";
+        render(alumno.id);
+      });
+    }
+    if (form) {
+      var boton = form.querySelector("button");
+      if (boton) boton.disabled = !tutor;
+    }
+  }
+
+  function updateBuzonBadge(data, alumno) {
+    var badge = document.getElementById("buzon-tab-badge");
+    if (!badge) return;
+    var count = window.CANTERA.contarNoLeidosAlumno(data, alumno.id);
+    badge.innerHTML = count > 0 ? '<span class="nav-badge">' + (count > 9 ? "9+" : count) + "</span>" : "";
   }
 
   /* 4. ADQUIRIR FORMACIONES ================================= */
