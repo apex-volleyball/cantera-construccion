@@ -990,6 +990,7 @@ table.data-table tr:hover td { background: var(--gray-bg); }
   flex-direction: column;
   overflow: hidden;
 }
+.chat-panel[hidden] { display: none !important; }
 .chat-panel-header {
   background: var(--navy);
   color: var(--white);
