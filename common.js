@@ -33,8 +33,28 @@ window.CANTERA_UI = window.CANTERA_UI || {};
     ai: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="7" width="14" height="11" rx="2"/><path d="M12 3v4M8 11h.01M16 11h.01M9 15h6"/></svg>',
     camera: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
     refresh: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 11A8 8 0 1 0 19 15"/><path d="M20 4v7h-7"/></svg>',
-    chat: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>'
+    chat: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>',
+    bolt: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>',
+    pipe: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V5h4v4"/><path d="M6 9h9a3 3 0 0 1 3 3v2"/><path d="M18 17v-3"/><path d="M9 9v11"/><path d="M6 20h6"/></svg>',
+    paintRoller: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="12" height="6" rx="2"/><path d="M15 8h3"/><path d="M18 8v9"/><path d="M15 17h6"/></svg>',
+    cinturon: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h6"/><path d="M16 12h6"/><rect x="8" y="8" width="8" height="8" rx="1.5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>',
+    taladro: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="10" height="5" rx="1"/><path d="M13 10.5h4"/><path d="M17 9.5l3 1-3 1z"/><path d="M6 13v3"/><rect x="4" y="16" width="4" height="3" rx="0.5"/></svg>',
+    sierraCircular: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="14" r="6"/><path d="M9 8v12M3 14h12"/><rect x="13" y="6" width="8" height="5" rx="1"/><path d="M15 11v3"/></svg>',
+    esmeriladora: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="9" width="9" height="5" rx="1"/><path d="M13 11.5h3"/><circle cx="18" cy="15" r="4"/></svg>',
+    clavadora: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h9v5H4z"/><path d="M13 10h4v3h-4z"/><path d="M8 14v6"/><path d="M6 20h4"/></svg>',
+    nivelLaser: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="10" width="6" height="6" rx="1"/><path d="M15 13h6" stroke-dasharray="2 2"/><path d="M9 13H3" stroke-dasharray="2 2"/><path d="M12 16v5"/><path d="M9 21h6"/></svg>',
+    multiherramienta: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="10" height="5" rx="1"/><path d="M13 11.5h6"/><path d="M15 10l1 1.5-1 1.5"/><path d="M18 10l1 1.5-1 1.5"/></svg>'
   };
+
+  function caratulaHTML(iconKey, colorKey) {
+    var icon = ICONS[iconKey] || ICONS.tool;
+    var color = colorKey || "sky";
+    return (
+      '<div class="course-caratula course-caratula-' + color + '">' +
+        '<div class="course-caratula-icon">' + icon + "</div>" +
+      "</div>"
+    );
+  }
 
   /* 2. COMPONENTES DE MARCADO =============================== */
 
@@ -233,6 +253,7 @@ window.CANTERA_UI = window.CANTERA_UI || {};
     initialsFromName: initialsFromName,
     barChartHTML: barChartHTML,
     lineChartHTML: lineChartHTML,
-    renderNavBadges: renderNavBadges
+    renderNavBadges: renderNavBadges,
+    caratulaHTML: caratulaHTML
   };
 })();
