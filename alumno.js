@@ -103,14 +103,21 @@
   function renderEstadoEquipo(data, alumno) {
     var el = document.getElementById("estado-equipo-card");
     if (alumno.equipoId) {
-      var equipo = window.CANTERA.getEquipo(data, alumno.equipoId);
-      var obra = equipo ? window.CANTERA.getObra(data, equipo.obraId) : null;
+      var info = window.CANTERA.getInfoEquipoAlumno(data, alumno.id);
+      var equipo = info ? info.equipo : window.CANTERA.getEquipo(data, alumno.equipoId);
+      var obra = info ? info.obra : null;
+      var companeros = info ? info.companeros : [];
       el.innerHTML =
         '<div class="card-title">Mi equipo</div>' +
         "<p>Ya formas parte de <strong>" + equipo.nombre + "</strong> (" + equipo.codigo + ") como <strong>" + (alumno.rolEnEquipo || "integrante") + "</strong>.</p>" +
+        (companeros.length
+          ? '<ul class="equipo-card-miembros">' + companeros.map(function (c) {
+              return '<li><span>' + c.alumno.nombre + '</span><span class="rol-tag">' + window.CANTERA.rolEquipoLabel(c.rol) + '</span></li>';
+            }).join("") + "</ul>"
+          : "") +
         (obra
-          ? "<p class=\"text-sm text-mid mb-0\">Obra asignada: " + obra.codigo + " — etapa actual: " + obra.etapaActual + " (" + obra.porcentajeAvance + "% de avance).</p>"
-          : "");
+          ? '<p class="text-sm text-mid mb-0">Obra asignada: ' + obra.codigo + " en " + obra.ubicacion + " — etapa actual: " + obra.etapaActual + " (" + obra.porcentajeAvance + "% de avance). Entrega estimada: " + (obra.fechaEstimadaEntrega || "por definir") + ".</p>"
+          : '<p class="text-sm text-mid mb-0">Tu equipo todavía no tiene una obra asignada — en cuanto la tenga, aparecerá aquí.</p>');
     } else if (alumno.estadoCertificacion === "certificado") {
       el.innerHTML =
         '<div class="card-title">Estado</div>' +
