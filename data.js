@@ -321,6 +321,60 @@ window.CANTERA = window.CANTERA || {};
         potencial: "ayudante", equipoId: null, rolEnEquipo: null, destacado: false,
         progresoModulos: progresoParcial("al-12", 5, "en_curso"),
         solicitudesFormacion: []
+      },
+      {
+        id: "al-13", tutorId: "tu-01", nombre: "Mario Alberto Xitumul", edad: 30, municipio: "Quetzaltenango",
+        experienciaPrevia: "3 años en albañilería", disponibilidad: "completa", rolDeseado: "jefe de grupo",
+        nivelExperiencia: "avanzado", interesConstruccion: "alto", telefono: "5555-0113",
+        estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
+        potencial: "jefe", equipoId: null, rolEnEquipo: null, destacado: true,
+        progresoModulos: progresoCompleto("al-13"),
+        solicitudesFormacion: []
+      },
+      {
+        id: "al-14", tutorId: "tu-02", nombre: "Rosa Isela Cotzajay", edad: 23, municipio: "Quetzaltenango",
+        experienciaPrevia: "Sin experiencia previa", disponibilidad: "completa", rolDeseado: "ayudante",
+        nivelExperiencia: "inicial", interesConstruccion: "alto", telefono: "5555-0114",
+        estadoDiagnostico: "completado", estadoFormacion: "en_curso", estadoCertificacion: "en_formacion",
+        potencial: "ayudante", equipoId: null, rolEnEquipo: null, destacado: false,
+        progresoModulos: progresoParcial("al-14", 6, "en_curso"),
+        solicitudesFormacion: []
+      },
+      {
+        id: "al-15", tutorId: "tu-03", nombre: "Julio César Marroquín", edad: 34, municipio: "Escuintla",
+        experienciaPrevia: "7 años como operador de maquinaria", disponibilidad: "completa", rolDeseado: "jefe de grupo",
+        nivelExperiencia: "avanzado", interesConstruccion: "alto", telefono: "5555-0115",
+        estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
+        potencial: "jefe", equipoId: null, rolEnEquipo: null, destacado: false,
+        progresoModulos: progresoCompleto("al-15"),
+        solicitudesFormacion: []
+      },
+      {
+        id: "al-16", tutorId: "tu-01", nombre: "Katherine Waleska Ixchop", edad: 21, municipio: "Escuintla",
+        experienciaPrevia: "1 año en acabados", disponibilidad: "completa", rolDeseado: "asistente",
+        nivelExperiencia: "intermedio", interesConstruccion: "medio", telefono: "5555-0116",
+        estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
+        potencial: "asistente", equipoId: null, rolEnEquipo: null, destacado: false,
+        progresoModulos: progresoCompleto("al-16"),
+        solicitudesFormacion: []
+      },
+      {
+        id: "al-17", tutorId: "tu-02", nombre: "Hugo Leonel Caal", edad: 27, municipio: "Cobán",
+        experienciaPrevia: "2 años en obra gris", disponibilidad: "completa", rolDeseado: "ayudante",
+        nivelExperiencia: "intermedio", interesConstruccion: "alto", telefono: "5555-0117",
+        estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
+        potencial: "ayudante", equipoId: null, rolEnEquipo: null, destacado: false,
+        progresoModulos: progresoCompleto("al-17"),
+        solicitudesFormacion: []
+      },
+      {
+        id: "al-18", tutorId: "tu-03", nombre: "Floridalma Xol", edad: 19, municipio: "Cobán",
+        experienciaPrevia: "Sin experiencia previa", disponibilidad: "completa", rolDeseado: "ayudante",
+        nivelExperiencia: "inicial", interesConstruccion: "alto", telefono: "5555-0118",
+        estadoDiagnostico: "completado", estadoFormacion: "en_curso", estadoCertificacion: "en_formacion",
+        potencial: "ayudante", equipoId: null, rolEnEquipo: null, destacado: false,
+        progresoModulos: progresoParcial("al-18", 4, "en_curso"),
+        solicitudesFormacion: []
       }
     ],
 
@@ -857,6 +911,39 @@ window.CANTERA = window.CANTERA || {};
     return out;
   }
 
+/* 7. MAPA DE COBERTURA POR DEPARTAMENTO ============================ */
+
+  var MUNICIPIO_A_DEPARTAMENTO = {
+    "San Juan Sacatepéquez": "dep-guatemala",
+    "Mixco": "dep-guatemala",
+    "Chimaltenango": "dep-chimaltenango",
+    "Santa Apolonia": "dep-chimaltenango",
+    "San Martín Jilotepeque": "dep-chimaltenango",
+    "Quetzaltenango": "dep-quetzaltenango",
+    "Escuintla": "dep-escuintla",
+    "Cobán": "dep-alta-verapaz"
+  };
+
+  function getDepartamentoDeAlumno(alumno) {
+    return MUNICIPIO_A_DEPARTAMENTO[alumno.municipio] || null;
+  }
+
+  function getPersonasPorDepartamento(data, depId) {
+    return data.alumnos.filter(function (a) {
+      return getDepartamentoDeAlumno(a) === depId;
+    });
+  }
+
+  function getConteoPorDepartamento(data) {
+    var conteo = {};
+    data.alumnos.forEach(function (a) {
+      var dep = getDepartamentoDeAlumno(a);
+      if (!dep) return;
+      conteo[dep] = (conteo[dep] || 0) + 1;
+    });
+    return conteo;
+  }
+
   /* API PÚBLICA ============================================ */
   window.CANTERA = {
     MODULOS_FORMATIVOS: MODULOS_FORMATIVOS,
@@ -912,6 +999,9 @@ window.CANTERA = window.CANTERA || {};
     getDudasPendientesTutor: getDudasPendientesTutor,
     getMensajesDirectivos: getMensajesDirectivos,
     getNotificacionesTutor: getNotificacionesTutor,
+    getDepartamentoDeAlumno: getDepartamentoDeAlumno,
+    getPersonasPorDepartamento: getPersonasPorDepartamento,
+    getConteoPorDepartamento: getConteoPorDepartamento,
 
     formatFecha: formatFecha,
     scoreCategoria: scoreCategoria,
