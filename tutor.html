@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es-GT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Tutor — Cantera Construcción</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header no-print">
+  <div class="wrap app-header-bar" style="justify-content:space-between">
+    <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
+    <div class="role-switch">
+      <a href="alumno.html">Alumno</a>
+      <a href="tutor.html" class="active">Tutor</a>
+      <a href="jefe.html">Jefe de Grupo</a>
+      <a href="admin.html">Administrador</a>
+      <a href="financiera.html">Financiera</a>
+    </div>
+    <button class="reset-demo-btn no-print">↻ Reiniciar demo</button>
+  </div>
+</header>
+
+<div class="app-shell simple-view">
+  <main class="app-main">
+    <div class="wrap no-print" style="max-width:760px">
+
+      <div class="field mt-8" style="max-width:360px">
+        <label for="selector-tutor">Ver perfil de (demo)</label>
+        <select id="selector-tutor"></select>
+      </div>
+
+      <!-- PERFIL DEL TUTOR ==================================== -->
+      <div id="tutor-perfil-card"></div>
+
+      <!-- MENÚ DE PESTAÑAS =================================== -->
+      <div class="tabs mt-16">
+        <button class="tab-btn active" data-tab="tab-resumen">Resumen</button>
+        <button class="tab-btn" data-tab="tab-alumnos">Mis alumnos</button>
+        <button class="tab-btn" data-tab="tab-buzon">Buzón<span id="tutor-buzon-badge"></span></button>
+      </div>
+
+      <!-- TAB: RESUMEN ======================================= -->
+      <div class="tab-panel active" id="tab-resumen">
+        <div class="grid grid-3 mt-8" id="tutor-resumen-stats"></div>
+        <div class="card mt-16">
+          <div class="card-title">Notificaciones</div>
+          <div id="tutor-notificaciones"></div>
+        </div>
+      </div>
+
+      <!-- TAB: MIS ALUMNOS ==================================== -->
+      <div class="tab-panel" id="tab-alumnos">
+        <div id="tutor-lista-alumnos"></div>
+      </div>
+
+      <!-- TAB: BUZÓN =========================================== -->
+      <div class="tab-panel" id="tab-buzon">
+        <div class="buzon-filtros" id="buzon-filtros"></div>
+        <div id="tutor-buzon-lista"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="app-footer no-print">
+    <span class="tag">Prototipo v1 — Fase 1</span> Vista Tutor · datos de ejemplo, guardados solo en este navegador.
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script src="tutor.js"></script>
+</body>
+</html>
