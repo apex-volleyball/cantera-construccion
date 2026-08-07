@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
   renderPreviewJefe(data, featuredEquipo, featuredObra);
   renderPreviewAdmin(data);
   renderPreviewFinanciera(data, featuredObra);
+  renderPreviewRRHH(data);
 
   /* --- Criterios de éxito del piloto --- */
   var successList = document.getElementById("success-list");
@@ -167,6 +168,36 @@ document.addEventListener("DOMContentLoaded", function () {
         '<div class="mini-kpi"><div class="num">' + window.CANTERA.formatQ(liberado) + '</div><div class="label">Liberado en ' + obra.codigo + '</div></div>' +
       "</div>" +
       window.CANTERA_UI.lineChartHTML(points);
+  }
+
+  function renderPreviewRRHH(dataObj) {
+    var el = document.getElementById("prev-rrhh");
+    if (!el) return;
+    var resumen = window.CANTERA.getResumenCuentasBanRural(dataObj);
+    var total = dataObj.alumnos.length || 1;
+    var pctAbiertas = Math.round((resumen.abierta / total) * 100);
+    var embudo = window.CANTERA.getEmbudoAdmision(dataObj);
+    var etapas = [
+      { label: "Diagnosticado", count: embudo.diagnosticado || 0 },
+      { label: "En formación", count: embudo.en_formacion || 0 },
+      { label: "Certificado", count: embudo.certificado || 0 }
+    ];
+    el.innerHTML =
+      '<div class="mini-kpi-row" style="margin-bottom:10px">' +
+        '<div class="mini-kpi"><div class="num">' + resumen.abierta + '</div><div class="label">Cuentas BanRural abiertas (' + pctAbiertas + '%)</div></div>' +
+      "</div>" +
+      '<div class="embudo-admision">' +
+      etapas.map(function (e) {
+        var pct = Math.round((e.count / total) * 100);
+        return (
+          '<div class="embudo-etapa">' +
+            '<div class="embudo-etapa-label">' + e.label + "</div>" +
+            '<div class="embudo-etapa-bar"><span style="width:' + pct + '%"></span></div>' +
+            '<div class="embudo-etapa-count">' + e.count + "</div>" +
+          "</div>"
+        );
+      }).join("") +
+      "</div>";
   }
 
   function setText(id, value) {
