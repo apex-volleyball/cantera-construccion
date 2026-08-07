@@ -576,6 +576,24 @@ window.CANTERA = window.CANTERA || {};
       { id: "md-02", tutorId: "tu-03", de: "Administración Cantera", asunto: "Nuevo alumno asignado",
         texto: "Se te ha asignado un nuevo alumno: Elvia Tzoc, actualmente sin equipo.",
         fecha: "2026-08-02", leido: false }
+    ],
+
+    seguimientosTutoria: [
+      { id: "seg-01", tutorId: "tu-03", alumnoId: "al-11", fecha: "2026-07-10", tipo: "llamada",
+        nota: "Byron tuvo dificultades con el módulo de seguridad en obra. Se reforzó el contenido por teléfono y quedó de repasar el material por su cuenta antes de la próxima evaluación." },
+      { id: "seg-02", tutorId: "tu-03", alumnoId: "al-12", fecha: "2026-07-25", tipo: "visita",
+        nota: "Visita de seguimiento de rutina. Elvia avanza bien en su ruta formativa, sin bloqueos." },
+      { id: "seg-03", tutorId: "tu-01", alumnoId: "al-01", fecha: "2026-08-01", tipo: "nota",
+        nota: "Confirmada su certificación. Felicitado por su desempeño consistente en obra." },
+      { id: "seg-04", tutorId: "tu-02", alumnoId: "al-14", fecha: "2026-06-15", tipo: "llamada",
+        nota: "Primera llamada de bienvenida al programa. Se explicó la ruta formativa completa." }
+    ],
+
+    tareasTutor: [
+      { id: "tar-01", tutorId: "tu-03", alumnoId: "al-11", texto: "Reforzar módulo de seguridad con Byron antes de su próxima evaluación", hecha: false, fechaLimite: "2026-08-15", fechaCreacion: "2026-07-10" },
+      { id: "tar-02", tutorId: "tu-01", alumnoId: "al-13", texto: "Confirmar disponibilidad de Mario para asignación a un nuevo equipo", hecha: false, fechaLimite: "2026-08-12", fechaCreacion: "2026-08-01" },
+      { id: "tar-03", tutorId: "tu-02", alumnoId: null, texto: "Enviar recordatorio de evaluación mensual a todo el grupo", hecha: true, fechaLimite: "2026-07-30", fechaCreacion: "2026-07-20" },
+      { id: "tar-04", tutorId: "tu-03", alumnoId: "al-18", texto: "Revisar avance de módulo de acabados con Floridalma", hecha: false, fechaLimite: "2026-08-20", fechaCreacion: "2026-08-05" }
     ]
   };
 
@@ -584,7 +602,9 @@ window.CANTERA = window.CANTERA || {};
   /* 3. PERSISTENCIA ======================================== */
 
   function cloneSeed() {
-    return JSON.parse(JSON.stringify(SEED));
+    var clonado = JSON.parse(JSON.stringify(SEED));
+    inicializarPerfilesRRHH(clonado);
+    return clonado;
   }
 
   function loadData() {
@@ -620,6 +640,14 @@ window.CANTERA = window.CANTERA || {};
       data.mensajesDirectivos = [];
       changed = true;
     }
+    if (!data.seguimientosTutoria) {
+      data.seguimientosTutoria = [];
+      changed = true;
+    }
+    if (!data.tareasTutor) {
+      data.tareasTutor = [];
+      changed = true;
+    }
     if (data.alumnos) {
       var faltaTutorId = data.alumnos.some(function (a) { return !a.tutorId; });
       if (faltaTutorId) {
@@ -633,6 +661,11 @@ window.CANTERA = window.CANTERA || {};
             }
           }
         });
+      }
+      var faltaPerfilRRHH = data.alumnos.some(function (a) { return !a.cuentaBanRural || !a.documentos; });
+      if (faltaPerfilRRHH) {
+        data.alumnos.forEach(function (a, idx) { derivarPerfilRRHH(a, idx); });
+        changed = true;
       }
     }
     return changed;
@@ -1103,6 +1136,196 @@ window.CANTERA = window.CANTERA || {};
     };
   }
 
+  /* ===========================================================================
+     9. RECURSOS HUMANOS — CUENTAS BANRURAL, EXPEDIENTES Y ADMISIÓN
+     =========================================================================== */
+
+  function derivarPerfilRRHH(alumno, idx) {
+    if (!alumno.cuentaBanRural) {
+      var estado;
+      if (alumno.estadoCertificacion === "certificado") {
+        estado = (idx % 5 === 0) ? "en_proceso" : "abierta";
+      } else if (alumno.estadoFormacion === "en_curso") {
+        estado = (idx % 3 === 0) ? "pendiente" : "en_proceso";
+      } else {
+        estado = "pendiente";
+      }
+      var dia = 3 + (idx % 24);
+      var mesNum = 2 + (idx % 6);
+      var mes = mesNum < 10 ? "0" + mesNum : "" + mesNum;
+      var diaStr = dia < 10 ? "0" + dia : "" + dia;
+      alumno.cuentaBanRural = {
+        estado: estado,
+        fechaApertura: estado === "abierta" ? ("2026-" + mes + "-" + diaStr) : null,
+        numeroCuenta: estado === "abierta" ? ("4521-XXXX-XXXX-" + (1000 + (idx * 37) % 8999)) : null
+      };
+    }
+    if (!alumno.documentos) {
+      var completo = idx % 5 !== 0;
+      alumno.documentos = {
+        dpi: true,
+        fotografia: true,
+        comprobanteDomicilio: completo,
+        cartaAntecedentes: completo && idx % 3 !== 0
+      };
+    }
+    return alumno;
+  }
+
+  function inicializarPerfilesRRHH(data) {
+    data.alumnos.forEach(function (a, idx) { derivarPerfilRRHH(a, idx); });
+  }
+
+  function getPorcentajeExpediente(alumno) {
+    if (!alumno.documentos) return 0;
+    var d = alumno.documentos;
+    var items = [d.dpi, d.fotografia, d.comprobanteDomicilio, d.cartaAntecedentes];
+    var completados = items.filter(Boolean).length;
+    return Math.round((completados / items.length) * 100);
+  }
+
+  function getResumenCuentasBanRural(data) {
+    var conteo = { abierta: 0, en_proceso: 0, pendiente: 0 };
+    data.alumnos.forEach(function (a) {
+      var estado = a.cuentaBanRural ? a.cuentaBanRural.estado : "pendiente";
+      conteo[estado] = (conteo[estado] || 0) + 1;
+    });
+    return conteo;
+  }
+
+  function actualizarEstadoCuentaBanRural(data, alumnoId, nuevoEstado) {
+    var alumno = getAlumno(data, alumnoId);
+    if (!alumno) return false;
+    if (!alumno.cuentaBanRural) alumno.cuentaBanRural = { estado: "pendiente", fechaApertura: null, numeroCuenta: null };
+    alumno.cuentaBanRural.estado = nuevoEstado;
+    if (nuevoEstado === "abierta") {
+      if (!alumno.cuentaBanRural.fechaApertura) alumno.cuentaBanRural.fechaApertura = new Date().toISOString().slice(0, 10);
+      if (!alumno.cuentaBanRural.numeroCuenta) {
+        var suffix = String(1000 + Math.floor(Math.random() * 8999));
+        alumno.cuentaBanRural.numeroCuenta = "4521-XXXX-XXXX-" + suffix;
+      }
+    } else {
+      alumno.cuentaBanRural.fechaApertura = null;
+      alumno.cuentaBanRural.numeroCuenta = null;
+    }
+    saveData(data);
+    return true;
+  }
+
+  function actualizarDocumentoAlumno(data, alumnoId, campo, valor) {
+    var alumno = getAlumno(data, alumnoId);
+    if (!alumno) return false;
+    if (!alumno.documentos) alumno.documentos = { dpi: false, fotografia: false, comprobanteDomicilio: false, cartaAntecedentes: false };
+    if (!(campo in alumno.documentos)) return false;
+    alumno.documentos[campo] = !!valor;
+    saveData(data);
+    return true;
+  }
+
+  function getEtapaAdmision(alumno) {
+    if (alumno.estadoCertificacion === "certificado") return "certificado";
+    if (alumno.estadoFormacion === "completado") return "formacion_completa";
+    if (alumno.estadoFormacion === "en_curso") return "en_formacion";
+    return "diagnosticado";
+  }
+
+  function getEmbudoAdmision(data) {
+    var etapas = { diagnosticado: 0, en_formacion: 0, formacion_completa: 0, certificado: 0 };
+    data.alumnos.forEach(function (a) {
+      var etapa = getEtapaAdmision(a);
+      etapas[etapa] = (etapas[etapa] || 0) + 1;
+    });
+    return etapas;
+  }
+
+  /* ===========================================================================
+     10. HERRAMIENTAS DE TUTORÍA — SEGUIMIENTO Y TAREAS
+     =========================================================================== */
+
+  function getSeguimientosDeAlumno(data, alumnoId) {
+    return (data.seguimientosTutoria || [])
+      .filter(function (s) { return s.alumnoId === alumnoId; })
+      .sort(function (a, b) { return a.fecha < b.fecha ? 1 : -1; });
+  }
+
+  function agregarSeguimiento(data, tutorId, alumnoId, nota, tipo) {
+    if (!data.seguimientosTutoria) data.seguimientosTutoria = [];
+    var nuevo = {
+      id: "seg-" + Date.now(),
+      tutorId: tutorId,
+      alumnoId: alumnoId,
+      fecha: new Date().toISOString().slice(0, 10),
+      nota: nota,
+      tipo: tipo || "nota"
+    };
+    data.seguimientosTutoria.push(nuevo);
+    saveData(data);
+    return nuevo;
+  }
+
+  function getUltimoSeguimiento(data, alumnoId) {
+    var lista = getSeguimientosDeAlumno(data, alumnoId);
+    return lista.length ? lista[0] : null;
+  }
+
+  function diasDesde(fechaStr) {
+    if (!fechaStr) return null;
+    var ahora = new Date();
+    var fecha = new Date(fechaStr + "T00:00:00");
+    var diff = Math.floor((ahora - fecha) / (1000 * 60 * 60 * 24));
+    return diff;
+  }
+
+  function getTareasTutor(data, tutorId) {
+    return (data.tareasTutor || []).filter(function (t) { return t.tutorId === tutorId; });
+  }
+
+  function crearTareaTutor(data, tutorId, alumnoId, texto, fechaLimite) {
+    if (!data.tareasTutor) data.tareasTutor = [];
+    var nueva = {
+      id: "tar-" + Date.now(),
+      tutorId: tutorId,
+      alumnoId: alumnoId || null,
+      texto: texto,
+      hecha: false,
+      fechaLimite: fechaLimite || null,
+      fechaCreacion: new Date().toISOString().slice(0, 10)
+    };
+    data.tareasTutor.push(nueva);
+    saveData(data);
+    return nueva;
+  }
+
+  function marcarTareaTutor(data, tareaId, hecha) {
+    var tarea = (data.tareasTutor || []).filter(function (t) { return t.id === tareaId; })[0];
+    if (!tarea) return false;
+    tarea.hecha = hecha;
+    saveData(data);
+    return true;
+  }
+
+  function getAlumnosPrioridad(data, tutorId) {
+    var alumnos = getAlumnosDeTutor(data, tutorId);
+    var dudasPendientes = getDudasPendientesTutor(data, tutorId);
+    var resultado = alumnos.map(function (al) {
+      var razones = [];
+      var dudas = dudasPendientes.filter(function (d) { return d.alumno.id === al.id; });
+      if (dudas.length) razones.push(dudas.length + (dudas.length === 1 ? " duda pendiente" : " dudas pendientes"));
+      var ultimoSeg = getUltimoSeguimiento(data, al.id);
+      var dias = ultimoSeg ? diasDesde(ultimoSeg.fecha) : null;
+      if (dias === null || dias > 14) razones.push(dias === null ? "Sin seguimiento registrado" : "Sin contacto hace " + dias + " días");
+      var pct = progresoFormativoPct(al);
+      if (pct < 40) razones.push("Progreso bajo (" + pct + "%)");
+      if (al.cuentaBanRural && al.cuentaBanRural.estado === "pendiente" && al.estadoCertificacion === "certificado") {
+        razones.push("Cuenta BanRural pendiente de abrir");
+      }
+      return { alumno: al, razones: razones, prioridad: razones.length };
+    });
+    return resultado
+      .filter(function (r) { return r.razones.length > 0; })
+      .sort(function (a, b) { return b.prioridad - a.prioridad; });
+  }
+
   /* API PÚBLICA ============================================ */
   window.CANTERA = {
     MODULOS_FORMATIVOS: MODULOS_FORMATIVOS,
@@ -1169,6 +1392,20 @@ window.CANTERA = window.CANTERA || {};
     asignarObraAEquipo: asignarObraAEquipo,
     getMapaObras: getMapaObras,
     getInfoEquipoAlumno: getInfoEquipoAlumno,
+    getPorcentajeExpediente: getPorcentajeExpediente,
+    getResumenCuentasBanRural: getResumenCuentasBanRural,
+    actualizarEstadoCuentaBanRural: actualizarEstadoCuentaBanRural,
+    actualizarDocumentoAlumno: actualizarDocumentoAlumno,
+    getEtapaAdmision: getEtapaAdmision,
+    getEmbudoAdmision: getEmbudoAdmision,
+    getSeguimientosDeAlumno: getSeguimientosDeAlumno,
+    agregarSeguimiento: agregarSeguimiento,
+    getUltimoSeguimiento: getUltimoSeguimiento,
+    diasDesde: diasDesde,
+    getTareasTutor: getTareasTutor,
+    crearTareaTutor: crearTareaTutor,
+    marcarTareaTutor: marcarTareaTutor,
+    getAlumnosPrioridad: getAlumnosPrioridad,
 
     formatFecha: formatFecha,
     scoreCategoria: scoreCategoria,
