@@ -40,3 +40,5 @@ Todos los nombres, obras y equipos son datos de ejemplo (ficticios), pensados
 para mostrar el flujo completo del sistema con un caso destacado (Juan Carlos
 Morales). No hay conexión a ningún sistema real todavía — esto es un
 prototipo de Fase 1, tal como se definió en la arquitectura del proyecto.
+
+Nota: republicado tras la incidencia de infraestructura de GitHub del 6 de agosto de 2026.
