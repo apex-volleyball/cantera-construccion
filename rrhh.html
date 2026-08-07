@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es-GT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Recursos Humanos — Cantera Construcción</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header no-print">
+  <div class="wrap app-header-bar" style="justify-content:space-between">
+    <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
+    <div class="role-switch">
+      <a href="alumno.html">Alumno</a>
+      <a href="tutor.html">Tutor</a>
+      <a href="jefe.html">Jefe de Grupo</a>
+      <a href="admin.html">Administrador</a>
+      <a href="financiera.html">BanRural</a>
+      <a href="rrhh.html" class="active">Recursos Humanos</a>
+    </div>
+    <button class="reset-demo-btn no-print">↻ Reiniciar demo</button>
+  </div>
+</header>
+
+<div class="app-shell dense-view">
+  <main class="app-main no-print">
+    <div class="wrap">
+
+      <div class="flex-between mt-8">
+        <div>
+          <h1 class="section-title mb-0">Recursos Humanos</h1>
+          <p class="section-sub" style="margin-bottom:8px">Admisión, apertura de cuentas BanRural y expedientes de los alumnos certificados.</p>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid grid-4 mt-16" id="rrhh-kpis"></div>
+
+      <!-- MENÚ DE PESTAÑAS -->
+      <div class="tabs mt-24">
+        <button class="tab-btn active" data-tab="tab-resumen">Resumen</button>
+        <button class="tab-btn" data-tab="tab-admision">Admisión</button>
+        <button class="tab-btn" data-tab="tab-cuentas">Cuentas BanRural<span id="rrhh-cuentas-badge"></span></button>
+        <button class="tab-btn" data-tab="tab-expedientes">Expedientes</button>
+      </div>
+
+      <!-- TAB: RESUMEN -->
+      <div class="tab-panel active" id="tab-resumen">
+        <div class="card mt-16">
+          <div class="card-title">Embudo de admisión</div>
+          <div class="embudo-admision" id="rrhh-embudo"></div>
+        </div>
+        <div class="card mt-16">
+          <div class="card-title">Equipos y obras activas</div>
+          <div id="rrhh-equipos-resumen"></div>
+        </div>
+      </div>
+
+      <!-- TAB: ADMISIÓN -->
+      <div class="tab-panel" id="tab-admision">
+        <div class="card mt-16">
+          <div class="card-title">Etapas de admisión</div>
+          <div class="embudo-admision" id="rrhh-embudo-detalle"></div>
+        </div>
+        <div class="card mt-16">
+          <div class="card-title">Alumnos por etapa</div>
+          <div id="rrhh-admision-lista"></div>
+        </div>
+      </div>
+
+      <!-- TAB: CUENTAS BANRURAL -->
+      <div class="tab-panel" id="tab-cuentas">
+        <div class="card mt-16">
+          <div class="card-title">Apertura de cuentas BanRural</div>
+          <p class="section-sub" style="margin-top:-6px">Actualiza el estado de la cuenta de cada alumno certificado o en proceso de certificación.</p>
+          <div id="rrhh-cuentas-lista"></div>
+        </div>
+      </div>
+
+      <!-- TAB: EXPEDIENTES -->
+      <div class="tab-panel" id="tab-expedientes">
+        <div class="card mt-16">
+          <div class="card-title">Expedientes de admisión</div>
+          <p class="section-sub" style="margin-top:-6px">DPI, fotografía, comprobante de domicilio y carta de antecedentes.</p>
+          <div id="rrhh-expedientes-lista"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="app-footer no-print">
+    <span class="tag">Prototipo v1 — Fase 1</span> Vista Recursos Humanos · datos de ejemplo, guardados solo en este navegador.
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script src="rrhh.js"></script>
+</body>
+</html>
