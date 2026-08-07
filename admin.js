@@ -25,6 +25,7 @@
     renderSolicitudes();
     renderCertificados();
     renderMapa();
+    renderAsignacionProyectos();
 
     document.getElementById("buscador-alumnos").addEventListener("input", function (e) {
       renderTablaAlumnos(e.target.value.toLowerCase());
@@ -33,6 +34,34 @@
     document.getElementById("btn-descargar-reporte").addEventListener("click", function () {
       buildReporteImprimible();
       window.print();
+    });
+
+    document.getElementById("input-nombre-equipo").addEventListener("input", actualizarBotonCrearEquipo);
+
+    document.getElementById("btn-crear-equipo").addEventListener("click", function () {
+      var nombre = document.getElementById("input-nombre-equipo").value.trim();
+      if (!nombre || equipoRoster.jefe.length !== 1) return;
+      var integrantes = [];
+      ROLES_EQUIPO_ADMIN.forEach(function (r) {
+        equipoRoster[r.valor].forEach(function (id) {
+          integrantes.push({ alumnoId: id, rol: r.valor });
+        });
+      });
+      window.CANTERA.crearEquipo(data, nombre, integrantes);
+      equipoRoster = { jefe: [], asistente: [], ayudante: [] };
+      document.getElementById("input-nombre-equipo").value = "";
+      renderAsignacionProyectos();
+      actualizarBotonCrearEquipo();
+    });
+
+    document.getElementById("btn-asignar-obra").addEventListener("click", function () {
+      if (!asignacionSeleccion.obraId || !asignacionSeleccion.equipoId) return;
+      window.CANTERA.asignarObraAEquipo(data, asignacionSeleccion.obraId, asignacionSeleccion.equipoId);
+      asignacionSeleccion = { obraId: null, equipoId: null };
+      renderAsignacionProyectos();
+      renderTablaEquipos();
+      renderTablaObras();
+      renderMetricas();
     });
   });
 
@@ -469,4 +498,264 @@
         }).join("") +
       "</div>";
   }
+
+  /* ===========================================================================
+     9. ASIGNACIÓN DE PROYECTOS
+     =========================================================================== */
+
+  var ROLES_EQUIPO_ADMIN = [
+    { valor: "jefe", etiqueta: "Jefe de grupo", max: 1 },
+    { valor: "asistente", etiqueta: "Asistente", max: 2 },
+    { valor: "ayudante", etiqueta: "Ayudante", max: 3 }
+  ];
+
+  var equipoRoster = { jefe: [], asistente: [], ayudante: [] };
+  var asignacionSeleccion = { obraId: null, equipoId: null };
+  var obraSeleccionadaId = null;
+  var ESTADO_OBRA_LABEL = { planificada: "Planificada", en_curso: "En marcha", finalizada: "Finalizada" };
+
+  function escapeHtmlAsig(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function formatQ(n) {
+    return Number(n || 0).toLocaleString("es-GT");
+  }
+
+  function idsEnRoster() {
+    return equipoRoster.jefe.concat(equipoRoster.asistente, equipoRoster.ayudante);
+  }
+
+  function renderAsignacionProyectos() {
+    renderDisponiblesStrip();
+    renderRolesGrid();
+    renderEquiposGrid();
+    renderAsignacionListas();
+    renderMapaObras();
+    actualizarBotonCrearEquipo();
+  }
+
+  function renderDisponiblesStrip() {
+    var cont = document.getElementById("disponibles-strip");
+    var enRoster = idsEnRoster();
+    var disponibles = window.CANTERA.getAlumnosSinEquipo(data).filter(function (a) {
+      return enRoster.indexOf(a.id) === -1;
+    });
+    if (!disponibles.length) {
+      cont.innerHTML = '<p class="disponibles-empty">No hay alumnos sin equipo disponibles en este momento.</p>';
+      return;
+    }
+    cont.innerHTML = disponibles.map(function (a) {
+      var iniciales = window.CANTERA_UI.initialsFromName(a.nombre);
+      var botones = ROLES_EQUIPO_ADMIN.map(function (r) {
+        var lleno = equipoRoster[r.valor].length >= r.max;
+        return '<button type="button" data-alumno="' + a.id + '" data-rol="' + r.valor + '"' + (lleno ? " disabled" : "") + ' title="Sumar como ' + r.etiqueta + '">' + r.etiqueta.split(" ")[0] + "</button>";
+      }).join("");
+      return (
+        '<div class="persona-chip">' +
+          '<div class="avatar xs">' + iniciales + "</div>" +
+          '<div><div class="nombre">' + escapeHtmlAsig(a.nombre) + '</div><div class="muni">' + escapeHtmlAsig(a.municipio) + "</div></div>" +
+          '<div class="persona-chip-roles">' + botones + "</div>" +
+        "</div>"
+      );
+    }).join("");
+
+    cont.querySelectorAll("button[data-alumno]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        agregarAlRoster(btn.getAttribute("data-alumno"), btn.getAttribute("data-rol"));
+      });
+    });
+  }
+
+  function agregarAlRoster(alumnoId, rol) {
+    var r = ROLES_EQUIPO_ADMIN.filter(function (x) { return x.valor === rol; })[0];
+    if (!r) return;
+    if (equipoRoster[rol].length >= r.max) return;
+    equipoRoster[rol].push(alumnoId);
+    renderDisponiblesStrip();
+    renderRolesGrid();
+    actualizarBotonCrearEquipo();
+  }
+
+  function quitarDelRoster(alumnoId, rol) {
+    equipoRoster[rol] = equipoRoster[rol].filter(function (id) { return id !== alumnoId; });
+    renderDisponiblesStrip();
+    renderRolesGrid();
+    actualizarBotonCrearEquipo();
+  }
+
+  function renderRolesGrid() {
+    var cont = document.getElementById("roles-grid");
+    cont.innerHTML = ROLES_EQUIPO_ADMIN.map(function (r) {
+      var ids = equipoRoster[r.valor];
+      var pills = ids.length
+        ? ids.map(function (id) {
+            var al = window.CANTERA.getAlumno(data, id);
+            var nombre = al ? al.nombre : id;
+            return (
+              '<div class="integrante-pill"><span>' + escapeHtmlAsig(nombre) + "</span>" +
+              '<button type="button" data-quitar="' + id + '" data-rol="' + r.valor + '" aria-label="Quitar">&times;</button></div>'
+            );
+          }).join("")
+        : '<p class="rol-grupo-empty">Sin asignar</p>';
+      return (
+        '<div class="rol-grupo">' +
+          '<div class="rol-grupo-header"><h5>' + r.etiqueta + '</h5><span class="rol-grupo-count">' + ids.length + " / " + r.max + "</span></div>" +
+          pills +
+        "</div>"
+      );
+    }).join("");
+
+    cont.querySelectorAll("button[data-quitar]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        quitarDelRoster(btn.getAttribute("data-quitar"), btn.getAttribute("data-rol"));
+      });
+    });
+  }
+
+  function actualizarBotonCrearEquipo() {
+    var nombre = document.getElementById("input-nombre-equipo").value.trim();
+    var btn = document.getElementById("btn-crear-equipo");
+    btn.disabled = !(nombre.length > 0 && equipoRoster.jefe.length === 1);
+  }
+
+  function renderEquiposGrid() {
+    var cont = document.getElementById("equipos-grid");
+    if (!data.equipos.length) {
+      cont.innerHTML = '<p class="disponibles-empty">Todavía no hay equipos formados.</p>';
+      return;
+    }
+    cont.innerHTML = data.equipos.map(function (eq) {
+      var obra = window.CANTERA.getObra(data, eq.obraId);
+      var miembros = eq.integrantes.map(function (it) {
+        var al = window.CANTERA.getAlumno(data, it.alumnoId);
+        return '<li><span>' + (al ? escapeHtmlAsig(al.nombre) : it.alumnoId) + '</span><span class="rol-tag">' + window.CANTERA.rolEquipoLabel(it.rol) + "</span></li>";
+      }).join("");
+      var obraHtml = obra
+        ? '<div class="equipo-card-obra">' + obra.codigo + " · " + obra.ubicacion + "</div>"
+        : '<div class="equipo-card-sin-obra">Sin obra asignada — disponible</div>';
+      var dispClase = eq.disponibilidad === "disponible" ? "green" : "yellow";
+      return (
+        '<div class="equipo-card">' +
+          '<div class="equipo-card-head"><div><h4>' + escapeHtmlAsig(eq.nombre) + '</h4><div class="codigo">' + eq.codigo + " · " + eq.ubicacion + "</div></div>" +
+          window.CANTERA_UI.badgeHTML(capitalize(eq.disponibilidad), dispClase) +
+          "</div>" +
+          '<ul class="equipo-card-miembros">' + miembros + "</ul>" +
+          obraHtml +
+        "</div>"
+      );
+    }).join("");
+  }
+
+  function renderAsignacionListas() {
+    var obrasCol = document.getElementById("lista-obras-planificadas");
+    var equiposCol = document.getElementById("lista-equipos-disponibles");
+
+    var planificadas = window.CANTERA.getObrasPorEstado(data, "planificada");
+    var disponibles = window.CANTERA.getEquiposDisponibles(data);
+
+    if (asignacionSeleccion.obraId && !planificadas.some(function (o) { return o.id === asignacionSeleccion.obraId; })) {
+      asignacionSeleccion.obraId = null;
+    }
+    if (asignacionSeleccion.equipoId && !disponibles.some(function (e) { return e.id === asignacionSeleccion.equipoId; })) {
+      asignacionSeleccion.equipoId = null;
+    }
+
+    obrasCol.innerHTML = planificadas.length
+      ? planificadas.map(function (o) {
+          var sel = o.id === asignacionSeleccion.obraId;
+          return (
+            '<div class="pick-card' + (sel ? " selected" : "") + '" data-obra="' + o.id + '">' +
+              "<h5>" + o.codigo + " · " + o.ubicacion + "</h5>" +
+              "<p>" + o.tipoVivienda + " — Q " + formatQ(o.montoTotalFinanciadoQ) + "</p>" +
+            "</div>"
+          );
+        }).join("")
+      : '<p class="pick-empty">No hay obras planificadas esperando equipo.</p>';
+
+    equiposCol.innerHTML = disponibles.length
+      ? disponibles.map(function (e) {
+          var sel = e.id === asignacionSeleccion.equipoId;
+          return (
+            '<div class="pick-card' + (sel ? " selected" : "") + '" data-equipo="' + e.id + '">' +
+              "<h5>" + escapeHtmlAsig(e.nombre) + " · " + e.codigo + "</h5>" +
+              "<p>" + e.integrantes.length + " integrantes — " + e.ubicacion + "</p>" +
+            "</div>"
+          );
+        }).join("")
+      : '<p class="pick-empty">No hay equipos disponibles en este momento.</p>';
+
+    obrasCol.querySelectorAll("[data-obra]").forEach(function (card) {
+      card.addEventListener("click", function () {
+        asignacionSeleccion.obraId = card.getAttribute("data-obra");
+        renderAsignacionListas();
+      });
+    });
+    equiposCol.querySelectorAll("[data-equipo]").forEach(function (card) {
+      card.addEventListener("click", function () {
+        asignacionSeleccion.equipoId = card.getAttribute("data-equipo");
+        renderAsignacionListas();
+      });
+    });
+
+    document.getElementById("btn-asignar-obra").disabled = !(asignacionSeleccion.obraId && asignacionSeleccion.equipoId);
+  }
+
+  function renderMapaObras() {
+    var g = document.getElementById("obra-markers");
+    var items = window.CANTERA.getMapaObras(data);
+
+    if (obraSeleccionadaId && !items.some(function (it) { return it.obra.id === obraSeleccionadaId; })) {
+      obraSeleccionadaId = null;
+    }
+
+    g.innerHTML = items.map(function (it) {
+      var o = it.obra;
+      var sel = o.id === obraSeleccionadaId ? " is-selected" : "";
+      return '<circle class="obra-marker obra-marker-' + o.estado + sel + '" data-obra="' + o.id + '" cx="' + o.mapaX + '" cy="' + o.mapaY + '" r="7"></circle>';
+    }).join("");
+
+    g.querySelectorAll("[data-obra]").forEach(function (marker) {
+      marker.addEventListener("click", function () {
+        obraSeleccionadaId = marker.getAttribute("data-obra");
+        renderMapaObras();
+      });
+    });
+
+    if (obraSeleccionadaId) {
+      renderPanelObra(obraSeleccionadaId);
+    } else {
+      renderPanelObrasVacio();
+    }
+  }
+
+  function renderPanelObrasVacio() {
+    document.getElementById("mapa-obras-panel").innerHTML =
+      '<div class="mapa-panel-empty">' +
+        window.CANTERA_UI.ICONS.mapPin +
+        "<p>Selecciona una obra en el mapa para ver su detalle: equipo asignado, avance y fecha estimada de entrega.</p>" +
+      "</div>";
+  }
+
+  function renderPanelObra(obraId) {
+    var obra = window.CANTERA.getObra(data, obraId);
+    if (!obra) { renderPanelObrasVacio(); return; }
+    var equipo = window.CANTERA.getEquipo(data, obra.equipoId);
+    var panel = document.getElementById("mapa-obras-panel");
+    panel.innerHTML =
+      '<div class="mapa-panel-header"><h3>' + obra.codigo + '</h3><div class="mapa-panel-count">' + obra.ubicacion + "</div></div>" +
+      '<div class="obra-detail-row"><span class="label">Estado</span><span class="value">' + (ESTADO_OBRA_LABEL[obra.estado] || obra.estado) + "</span></div>" +
+      '<div class="obra-detail-row"><span class="label">Propietario</span><span class="value">' + escapeHtmlAsig(obra.propietario) + "</span></div>" +
+      '<div class="obra-detail-row"><span class="label">Equipo asignado</span><span class="value">' + (equipo ? escapeHtmlAsig(equipo.nombre) : "Sin equipo asignado") + "</span></div>" +
+      '<div class="obra-detail-row"><span class="label">Etapa actual</span><span class="value">' + obra.etapaActual + "</span></div>" +
+      '<div class="obra-detail-row"><span class="label">Avance</span><span class="value">' + obra.porcentajeAvance + "%</span></div>" +
+      '<div class="obra-detail-row"><span class="label">Entrega estimada</span><span class="value">' + (obra.fechaEstimadaEntrega || "Por definir") + "</span></div>" +
+      '<div class="obra-detail-row"><span class="label">Monto financiado</span><span class="value">Q ' + formatQ(obra.montoTotalFinanciadoQ) + "</span></div>";
+  }
+
 })();
