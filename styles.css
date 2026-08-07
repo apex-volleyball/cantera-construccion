@@ -751,7 +751,8 @@ table.data-table tr:hover td { background: var(--gray-bg); }
   justify-content: center;
   flex-shrink: 0;
 }
-.course-caratula-icon svg { width: 44px; height: 44px; }
+.course-caratula-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.course-caratula-icon svg { width: 44px !important; height: 44px !important; max-width: none; }
 .course-caratula-yellow { background: linear-gradient(135deg, #FFF6E0 0%, #F6D98A 100%); color: var(--yellow); }
 .course-caratula-sky { background: linear-gradient(135deg, var(--sky-light) 0%, #A9CBEE 100%); color: var(--sky); }
 .course-caratula-green { background: linear-gradient(135deg, var(--green-bg) 0%, #A7D8AA 100%); color: var(--green); }
