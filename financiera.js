@@ -76,6 +76,11 @@
     setText("k-riesgo", riesgoAlto);
     setText("k-monto-total", window.CANTERA.formatQ(montoTotal));
     setText("k-monto-liberado", window.CANTERA.formatQ(montoLiberado));
+    var resumenCuentas = window.CANTERA.getResumenCuentasBanRural(data);
+    var totalAlumnosCuentas = data.alumnos.length;
+    var pctCuentasAbiertas = totalAlumnosCuentas ? Math.round((resumenCuentas.abierta / totalAlumnosCuentas) * 100) : 0;
+    setText("k-cuentas-banrural", resumenCuentas.abierta);
+    setText("k-cuentas-banrural-pct", pctCuentasAbiertas + "% de los alumnos activos");
   }
 
   function renderComparativaEquipos() {
