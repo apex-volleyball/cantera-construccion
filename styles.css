@@ -24,6 +24,7 @@
    19. TUTORES Y MENSAJERÍA
    20. MAPA DE COBERTURA (Administrador)
    21. ASIGNACIÓN DE PROYECTOS (Administrador)
+RECURSOS HUMANOS
    ========================================================= */
 
 /* 1. VARIABLES DE MARCA ================================= */
@@ -1434,4 +1435,65 @@ table.data-table tr:hover td { background: var(--gray-bg); }
     text-align: left;
   }
   table.data-table td:first-child::before { content: none; }
+}
+
+
+/* 22. HERRAMIENTAS DE TUTORÍA (Tutor) ======================================== */
+.prioridad-card { background: var(--white); border: 1px solid var(--gray-border); border-left: 4px solid var(--red); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+.prioridad-card.nivel-medio { border-left-color: var(--yellow); }
+.prioridad-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.prioridad-card-head h4 { font-size: 14px; color: var(--navy); margin: 0; }
+.prioridad-razones { display: flex; flex-wrap: wrap; gap: 6px; }
+.razon-tag { font-size: 11px; background: var(--gray-bg); color: var(--gray-mid); border-radius: 999px; padding: 3px 9px; }
+.prioridad-empty { font-size: 13px; color: var(--gray-mid); text-align: center; padding: 20px 0; }
+
+.tareas-lista { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.tarea-item { display: flex; align-items: flex-start; gap: 10px; background: var(--white); border: 1px solid var(--gray-border); border-radius: 8px; padding: 10px 12px; }
+.tarea-item.hecha { opacity: 0.55; }
+.tarea-item.hecha .tarea-texto { text-decoration: line-through; }
+.tarea-item input[type="checkbox"] { margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0; }
+.tarea-texto { flex: 1; font-size: 13px; color: var(--text); }
+.tarea-meta { font-size: 11px; color: var(--gray-mid); margin-top: 2px; }
+.tarea-add-form { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.tarea-add-form input[type="text"] { flex: 1; min-width: 180px; }
+.tarea-add-form input[type="date"] { max-width: 150px; }
+
+.seguimiento-timeline { list-style: none; padding: 0; margin: 10px 0; display: grid; gap: 8px; }
+.seguimiento-item { border-left: 2px solid var(--sky); padding-left: 10px; }
+.seguimiento-item .fecha { font-size: 11px; color: var(--gray-mid); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+.seguimiento-item .nota { font-size: 13px; color: var(--text); margin: 2px 0 0; }
+.seguimiento-empty { font-size: 12.5px; color: var(--gray-mid); font-style: italic; }
+.seguimiento-form { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.seguimiento-form select { max-width: 130px; }
+.seguimiento-form input[type="text"] { flex: 1; min-width: 160px; }
+.btn-seguimiento-toggle { background: none; border: none; color: var(--sky); font-size: 12.5px; font-weight: 600; cursor: pointer; padding: 0; margin-top: 8px; }
+.seguimiento-panel { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--gray-border); }
+
+/* 23. RECURSOS HUMANOS ======================================================= */
+.embudo-admision { display: grid; gap: 10px; }
+.embudo-etapa { display: flex; align-items: center; gap: 12px; }
+.embudo-etapa-label { width: 190px; font-size: 12.5px; color: var(--gray-mid); flex-shrink: 0; }
+.embudo-etapa-bar { flex: 1; background: var(--gray-bg); border-radius: 6px; height: 22px; position: relative; overflow: hidden; }
+.embudo-etapa-bar span { display: block; height: 100%; background: var(--sky); border-radius: 6px; transition: width 0.3s ease; }
+.embudo-etapa-count { width: 34px; text-align: right; font-size: 13px; font-weight: 700; color: var(--navy); flex-shrink: 0; }
+
+.rrhh-table-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--gray-border); flex-wrap: wrap; }
+.rrhh-table-row:last-child { border-bottom: none; }
+.rrhh-table-row .avatar.sm { flex-shrink: 0; }
+.rrhh-table-row .info { flex: 1; min-width: 140px; }
+.rrhh-table-row .info h4 { font-size: 13.5px; color: var(--navy); margin: 0 0 2px; }
+.rrhh-table-row .info p { font-size: 11.5px; color: var(--gray-mid); margin: 0; }
+.rrhh-table-row select { max-width: 150px; flex-shrink: 0; }
+.rrhh-cuenta-detalle { font-size: 11px; color: var(--gray-mid); flex-shrink: 0; width: 150px; text-align: right; }
+
+.expediente-checklist { display: flex; gap: 14px; flex-wrap: wrap; flex-shrink: 0; }
+.expediente-checklist label { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--text); cursor: pointer; }
+.expediente-pct { width: 42px; text-align: right; font-size: 12.5px; font-weight: 700; flex-shrink: 0; }
+.expediente-pct.completo { color: var(--green); }
+.expediente-pct.incompleto { color: var(--yellow); }
+
+@media (max-width: 700px) {
+  .rrhh-table-row { flex-direction: column; align-items: flex-start; }
+  .rrhh-cuenta-detalle { text-align: left; width: auto; }
+  .expediente-checklist { width: 100%; }
 }
