@@ -345,7 +345,7 @@ window.CANTERA = window.CANTERA || {};
         experienciaPrevia: "7 años como operador de maquinaria", disponibilidad: "completa", rolDeseado: "jefe de grupo",
         nivelExperiencia: "avanzado", interesConstruccion: "alto", telefono: "5555-0115",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
-        potencial: "jefe", equipoId: null, rolEnEquipo: null, destacado: false,
+        potencial: "jefe", equipoId: "eq-delta", rolEnEquipo: "jefe", destacado: false,
         progresoModulos: progresoCompleto("al-15"),
         solicitudesFormacion: []
       },
@@ -354,7 +354,7 @@ window.CANTERA = window.CANTERA || {};
         experienciaPrevia: "1 año en acabados", disponibilidad: "completa", rolDeseado: "asistente",
         nivelExperiencia: "intermedio", interesConstruccion: "medio", telefono: "5555-0116",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
-        potencial: "asistente", equipoId: null, rolEnEquipo: null, destacado: false,
+        potencial: "asistente", equipoId: "eq-delta", rolEnEquipo: "asistente", destacado: false,
         progresoModulos: progresoCompleto("al-16"),
         solicitudesFormacion: []
       },
@@ -363,7 +363,7 @@ window.CANTERA = window.CANTERA || {};
         experienciaPrevia: "2 años en obra gris", disponibilidad: "completa", rolDeseado: "ayudante",
         nivelExperiencia: "intermedio", interesConstruccion: "alto", telefono: "5555-0117",
         estadoDiagnostico: "completado", estadoFormacion: "completado", estadoCertificacion: "certificado",
-        potencial: "ayudante", equipoId: null, rolEnEquipo: null, destacado: false,
+        potencial: "ayudante", equipoId: "eq-delta", rolEnEquipo: "ayudante", destacado: false,
         progresoModulos: progresoCompleto("al-17"),
         solicitudesFormacion: []
       },
@@ -416,6 +416,18 @@ window.CANTERA = window.CANTERA || {};
         ],
         evaluacion: { formacion: 12, seguridad: 9, calidadTecnica: 11, puntualidad: 9, documentacion: 8, satisfaccionPropietario: 6, comunicacion: 3 },
         historialObras: ["ob-003"]
+      },
+      {
+        id: "eq-delta", codigo: "EQ-004", nombre: "Equipo Delta", ubicacion: "Escuintla",
+        disponibilidad: "disponible", categoria: "B", calificacionActual: 81, destacado: false,
+        obraId: null, fechaCreacion: "2026-01-05",
+        integrantes: [
+          { alumnoId: "al-15", rol: "jefe" },
+          { alumnoId: "al-16", rol: "asistente" },
+          { alumnoId: "al-17", rol: "ayudante" }
+        ],
+        evaluacion: { formacion: 18, seguridad: 13, calidadTecnica: 16, puntualidad: 12, documentacion: 12, satisfaccionPropietario: 9, comunicacion: 5 },
+        historialObras: ["ob-004"]
       }
     ],
 
@@ -425,21 +437,53 @@ window.CANTERA = window.CANTERA || {};
         propietario: "Familia López Ramírez", entidadFinancieraId: "ef-01", equipoId: "eq-alfa",
         fechaInicio: "2026-05-04", fechaEstimadaEntrega: "2026-09-15", etapaActual: "Acabados",
         supervisor: "Ing. Rodrigo Paz", tipoVivienda: "Vivienda unifamiliar de 65 m²",
-        estadoRiesgo: "bajo", porcentajeAvance: 82, destacada: true, montoTotalFinanciadoQ: 195000
+        estadoRiesgo: "bajo", porcentajeAvance: 82, estado: "en_curso", mapaX: 254, mapaY: 517.5, destacada: true, montoTotalFinanciadoQ: 195000
       },
       {
         id: "ob-002", codigo: "OB-2026-002", ubicacion: "Chimaltenango, Guatemala",
         propietario: "Familia Ramírez Coy", entidadFinancieraId: "ef-01", equipoId: "eq-beta",
         fechaInicio: "2026-06-01", fechaEstimadaEntrega: "2026-10-30", etapaActual: "Instalaciones",
         supervisor: "Ing. Fernando Ixchop", tipoVivienda: "Vivienda unifamiliar de 72 m²",
-        estadoRiesgo: "medio", porcentajeAvance: 55, destacada: false, montoTotalFinanciadoQ: 216000
+        estadoRiesgo: "medio", porcentajeAvance: 55, estado: "en_curso", mapaX: 208, mapaY: 512, destacada: false, montoTotalFinanciadoQ: 216000
       },
       {
         id: "ob-003", codigo: "OB-2026-003", ubicacion: "Santa Apolonia, Chimaltenango",
         propietario: "Familia Gómez Sical", entidadFinancieraId: "ef-02", equipoId: "eq-gamma",
         fechaInicio: "2026-06-20", fechaEstimadaEntrega: "2026-11-10", etapaActual: "Cimentación",
         supervisor: "Ing. Marta Xoc", tipoVivienda: "Vivienda unifamiliar de 58 m²",
-        estadoRiesgo: "alto", porcentajeAvance: 25, destacada: false, montoTotalFinanciadoQ: 174000
+        estadoRiesgo: "alto", porcentajeAvance: 25, estado: "en_curso", mapaX: 190, mapaY: 500, destacada: false, montoTotalFinanciadoQ: 174000
+      },
+      {
+        id: "ob-004", codigo: "OB-2026-004", ubicacion: "Escuintla, Escuintla",
+        propietario: "Familia Us Marroquín", entidadFinancieraId: "ef-01", equipoId: "eq-delta",
+        fechaInicio: "2026-01-12", fechaEstimadaEntrega: "2026-05-20", etapaActual: "Entrega",
+        supervisor: "Ing. Lucía Barrios", tipoVivienda: "Vivienda unifamiliar de 60 m²",
+        estadoRiesgo: "bajo", porcentajeAvance: 100, destacada: false, montoTotalFinanciadoQ: 168000,
+        estado: "finalizada", mapaX: 195, mapaY: 588
+      },
+      {
+        id: "ob-005", codigo: "OB-2026-005", ubicacion: "Quetzaltenango, Quetzaltenango",
+        propietario: "Familia Similox García", entidadFinancieraId: "ef-01", equipoId: null,
+        fechaInicio: null, fechaEstimadaEntrega: "2026-12-15", etapaActual: "Sin iniciar",
+        supervisor: "Por asignar", tipoVivienda: "Vivienda unifamiliar de 68 m²",
+        estadoRiesgo: "pendiente", porcentajeAvance: 0, destacada: false, montoTotalFinanciadoQ: 205000,
+        estado: "planificada", mapaX: 80, mapaY: 498
+      },
+      {
+        id: "ob-006", codigo: "OB-2026-006", ubicacion: "Cobán, Alta Verapaz",
+        propietario: "Familia Caal Xol", entidadFinancieraId: "ef-02", equipoId: null,
+        fechaInicio: null, fechaEstimadaEntrega: "2027-01-20", etapaActual: "Sin iniciar",
+        supervisor: "Por asignar", tipoVivienda: "Vivienda unifamiliar de 55 m²",
+        estadoRiesgo: "pendiente", porcentajeAvance: 0, destacada: false, montoTotalFinanciadoQ: 158000,
+        estado: "planificada", mapaX: 310, mapaY: 330
+      },
+      {
+        id: "ob-007", codigo: "OB-2026-007", ubicacion: "Antigua Guatemala, Sacatepéquez",
+        propietario: "Familia Ordóñez Pérez", entidadFinancieraId: "ef-01", equipoId: null,
+        fechaInicio: null, fechaEstimadaEntrega: "2026-12-30", etapaActual: "Sin iniciar",
+        supervisor: "Por asignar", tipoVivienda: "Vivienda unifamiliar de 75 m²",
+        estadoRiesgo: "pendiente", porcentajeAvance: 0, destacada: false, montoTotalFinanciadoQ: 228000,
+        estado: "planificada", mapaX: 238, mapaY: 545
       }
     ],
 
@@ -915,6 +959,7 @@ window.CANTERA = window.CANTERA || {};
 
   var MUNICIPIO_A_DEPARTAMENTO = {
     "San Juan Sacatepéquez": "dep-guatemala",
+    "Antigua Guatemala": "dep-sacatepequez",
     "Mixco": "dep-guatemala",
     "Chimaltenango": "dep-chimaltenango",
     "Santa Apolonia": "dep-chimaltenango",
@@ -942,6 +987,99 @@ window.CANTERA = window.CANTERA || {};
       conteo[dep] = (conteo[dep] || 0) + 1;
     });
     return conteo;
+  }
+
+/* 8. ASIGNACIÓN DE EQUIPOS Y OBRAS =================================== */
+
+  var ROLES_EQUIPO = [
+    { valor: "jefe", etiqueta: "Jefe de grupo" },
+    { valor: "asistente", etiqueta: "Asistente" },
+    { valor: "ayudante", etiqueta: "Ayudante" }
+  ];
+
+  function rolEquipoLabel(rol) {
+    var r = ROLES_EQUIPO.filter(function (x) { return x.valor === rol; })[0];
+    return r ? r.etiqueta : rol;
+  }
+
+  function getAlumnosSinEquipo(data) {
+    return data.alumnos.filter(function (a) { return !a.equipoId; });
+  }
+
+  function getEquiposDisponibles(data) {
+    return data.equipos.filter(function (e) { return !e.obraId; });
+  }
+
+  function getObrasPorEstado(data, estado) {
+    return data.obras.filter(function (o) { return o.estado === estado; });
+  }
+
+  function siguienteCodigoEquipo(data) {
+    var n = data.equipos.length + 1;
+    var s = String(n);
+    while (s.length < 3) s = "0" + s;
+    return "EQ-" + s;
+  }
+
+  function crearEquipo(data, nombre, integrantes) {
+    var municipios = integrantes.map(function (it) {
+      var al = getAlumno(data, it.alumnoId);
+      return al ? al.municipio : null;
+    }).filter(Boolean);
+    var ubicacion = municipios.length ? municipios[0] : "Por definir";
+
+    var nuevo = {
+      id: "eq-" + Date.now(),
+      codigo: siguienteCodigoEquipo(data),
+      nombre: nombre,
+      ubicacion: ubicacion,
+      disponibilidad: "disponible",
+      categoria: "B",
+      calificacionActual: null,
+      destacado: false,
+      obraId: null,
+      fechaCreacion: new Date().toISOString().slice(0, 10),
+      integrantes: integrantes.slice(),
+      evaluacion: null,
+      historialObras: []
+    };
+    data.equipos.push(nuevo);
+
+    integrantes.forEach(function (it) {
+      var al = getAlumno(data, it.alumnoId);
+      if (al) {
+        al.equipoId = nuevo.id;
+        al.rolEnEquipo = it.rol;
+      }
+    });
+
+    saveData(data);
+    return nuevo;
+  }
+
+  function asignarObraAEquipo(data, obraId, equipoId) {
+    var obra = getObra(data, obraId);
+    var equipo = getEquipo(data, equipoId);
+    if (!obra || !equipo) return false;
+
+    obra.equipoId = equipo.id;
+    obra.estado = "en_curso";
+    if (!obra.fechaInicio) obra.fechaInicio = new Date().toISOString().slice(0, 10);
+    if (!obra.etapaActual || obra.etapaActual === "Sin iniciar") obra.etapaActual = "Preparación";
+    if (obra.estadoRiesgo === "pendiente") obra.estadoRiesgo = "bajo";
+
+    equipo.obraId = obra.id;
+    equipo.disponibilidad = "en obra";
+    if (equipo.historialObras.indexOf(obra.id) === -1) equipo.historialObras.push(obra.id);
+
+    saveData(data);
+    return true;
+  }
+
+  function getMapaObras(data) {
+    return data.obras.map(function (o) {
+      return { obra: o, equipo: o.equipoId ? getEquipo(data, o.equipoId) : null };
+    });
   }
 
   /* API PÚBLICA ============================================ */
@@ -1002,6 +1140,13 @@ window.CANTERA = window.CANTERA || {};
     getDepartamentoDeAlumno: getDepartamentoDeAlumno,
     getPersonasPorDepartamento: getPersonasPorDepartamento,
     getConteoPorDepartamento: getConteoPorDepartamento,
+    rolEquipoLabel: rolEquipoLabel,
+    getAlumnosSinEquipo: getAlumnosSinEquipo,
+    getEquiposDisponibles: getEquiposDisponibles,
+    getObrasPorEstado: getObrasPorEstado,
+    crearEquipo: crearEquipo,
+    asignarObraAEquipo: asignarObraAEquipo,
+    getMapaObras: getMapaObras,
 
     formatFecha: formatFecha,
     scoreCategoria: scoreCategoria,
