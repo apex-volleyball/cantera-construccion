@@ -130,7 +130,7 @@
   }
 
   function renderComparativaEquipos() {
-    var ordenado = data.equipos.slice().sort(function (a, b) { return b.calificacionActual - a.calificacionActual; });
+    var ordenado = data.equipos.filter(function (eq) { return eq.calificacionActual != null; }).sort(function (a, b) { return b.calificacionActual - a.calificacionActual; });
     var items = ordenado.map(function (eq) {
       var cat = window.CANTERA.scoreCategoria(eq.calificacionActual);
       return { label: eq.codigo, value: eq.calificacionActual, max: 100, clase: cat.clase === "sky" ? "" : cat.clase };
@@ -141,7 +141,7 @@
   }
 
   function renderRanking() {
-    var ordenado = data.equipos.slice().sort(function (a, b) { return b.calificacionActual - a.calificacionActual; });
+    var ordenado = data.equipos.filter(function (eq) { return eq.calificacionActual != null; }).sort(function (a, b) { return b.calificacionActual - a.calificacionActual; });
     var el = document.getElementById("ranking-equipos");
     el.innerHTML = ordenado.map(function (eq) {
       var obra = window.CANTERA.getObra(data, eq.obraId);
@@ -243,7 +243,7 @@
       var cat = window.CANTERA.scoreCategoria(eq.calificacionActual);
       return (
         '<tr><td data-label="Código">' + eq.codigo + '</td><td data-label="Nombre">' + eq.nombre + "</td>" +
-        '<td data-label="Categoría">' + window.CANTERA_UI.badgeHTML(cat.label + " · " + eq.calificacionActual, cat.clase) + "</td>" +
+        '<td data-label="Categoría">' + window.CANTERA_UI.badgeHTML(cat.label + (eq.calificacionActual != null ? " · " + eq.calificacionActual : ""), cat.clase) + "</td>" +
         '<td data-label="Integrantes">' + eq.integrantes.length + '</td><td data-label="Ubicación">' + eq.ubicacion + "</td>" +
         '<td data-label="Obra asignada">' + (obra ? obra.codigo : "—") + '</td><td data-label="Disponibilidad">' + capitalize(eq.disponibilidad) + "</td></tr>"
       );
