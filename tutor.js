@@ -2,11 +2,28 @@
   "use strict";
   var SELECTED_KEY = "cantera_ui_selected_tutor";
   var buzonFiltroActual = "todo";
+  var seguimientoAbierto = {};
 
   document.addEventListener("DOMContentLoaded", function () {
     var data = window.CANTERA.loadData();
     populateSelector(data);
     bindTabs();
+
+    document.getElementById("form-nueva-tarea").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var freshData = window.CANTERA.loadData();
+      var tutorId = getSelectedId(freshData);
+      var texto = document.getElementById("input-nueva-tarea").value.trim();
+      var alumnoId = document.getElementById("select-tarea-alumno").value || null;
+      var fecha = document.getElementById("input-tarea-fecha").value || null;
+      if (!texto) return;
+      window.CANTERA.crearTareaTutor(freshData, tutorId, alumnoId, texto, fecha);
+      document.getElementById("input-nueva-tarea").value = "";
+      document.getElementById("input-tarea-fecha").value = "";
+      var t = window.CANTERA.getTutor(freshData, tutorId);
+      renderTareas(freshData, t);
+      actualizarBadgeHerramientas(freshData, t);
+    });
 
     var initialId = getSelectedId(data);
     document.getElementById("selector-tutor").value = initialId;
@@ -53,6 +70,7 @@
     renderPerfil(data, tutor);
     renderResumen(data, tutor);
     renderAlumnos(data, tutor);
+    renderHerramientas(data, tutor);
     renderBuzonFiltros(data, tutor);
     renderBuzon(data, tutor);
   }
@@ -118,7 +136,7 @@
       var promedio = window.CANTERA.promedioNotas(al);
       var iniciales = window.CANTERA_UI.initialsFromName(al.nombre);
       return (
-        '<div class="alumno-tutor-card">' +
+        '<div class="alumno-tutor-card" data-alumno-card="' + al.id + '">' +
           '<div class="alumno-tutor-card-head">' +
             '<div class="avatar sm">' + iniciales + "</div>" +
             '<div style="flex:1"><h4>' + al.nombre + '</h4><p class="text-sm text-mid mb-0">' + al.municipio + (equipo ? " · " + equipo.nombre + " (" + window.CANTERA.rolEquipoLabel(al.rolEnEquipo) + ")" : " · Sin equipo asignado") + "</p></div>" +
@@ -127,6 +145,8 @@
           (obra ? '<p class="text-sm text-mid mb-4">Obra: ' + obra.ubicacion + " — " + obra.etapaActual + " (" + obra.porcentajeAvance + "% de avance)</p>" : "") +
           window.CANTERA_UI.progressRowHTML(pct, pct === 100 ? "green" : "") +
           '<p class="text-sm text-mid mt-8 mb-0">Nota promedio: ' + (promedio !== null ? promedio : "—") + ' · <a href="#" data-ver-buzon="' + al.id + '">Ver dudas pendientes →</a></p>' +
+          '<button type="button" class="btn-seguimiento-toggle" data-toggle-seguimiento="' + al.id + '">' + (seguimientoAbierto[al.id] ? "Ocultar seguimiento ↑" : "Ver seguimiento →") + "</button>" +
+          (seguimientoAbierto[al.id] ? renderSeguimientoPanelHTML(data, al) : "") +
         "</div>"
       );
     }).join("");
@@ -140,6 +160,29 @@
         var freshData = window.CANTERA.loadData();
         renderBuzonFiltros(freshData, tutor);
         renderBuzon(freshData, tutor);
+      });
+    });
+
+    el.querySelectorAll("[data-toggle-seguimiento]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var id = btn.getAttribute("data-toggle-seguimiento");
+        seguimientoAbierto[id] = !seguimientoAbierto[id];
+        renderAlumnos(window.CANTERA.loadData(), tutor);
+      });
+    });
+
+    el.querySelectorAll("[data-seguimiento-form]").forEach(function (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var alumnoId = form.getAttribute("data-seguimiento-form");
+        var tipo = form.querySelector('select[name="tipo"]').value;
+        var nota = form.querySelector('input[name="nota"]').value.trim();
+        if (!nota) return;
+        var freshData = window.CANTERA.loadData();
+        window.CANTERA.agregarSeguimiento(freshData, tutor.id, alumnoId, nota, tipo);
+        seguimientoAbierto[alumnoId] = true;
+        renderAlumnos(freshData, tutor);
+        renderHerramientas(freshData, window.CANTERA.getTutor(freshData, tutor.id));
       });
     });
   }
@@ -231,6 +274,112 @@
         "</form>" +
       "</div>"
     );
+  }
+
+  function renderSeguimientoPanelHTML(data, alumno) {
+    var timeline = window.CANTERA.getSeguimientosDeAlumno(data, alumno.id);
+    var lista = timeline.length
+      ? '<ul class="seguimiento-timeline">' + timeline.map(function (s) {
+          return '<li class="seguimiento-item"><div class="fecha">' + s.fecha + " · " + (s.tipo.charAt(0).toUpperCase() + s.tipo.slice(1)) + '</div><p class="nota">' + s.nota + "</p></li>";
+        }).join("") + "</ul>"
+      : '<p class="seguimiento-empty">Todavía no hay seguimiento registrado para este alumno.</p>';
+    return (
+      '<div class="seguimiento-panel">' +
+        lista +
+        '<form class="seguimiento-form" data-seguimiento-form="' + alumno.id + '">' +
+          '<select name="tipo"><option value="llamada">Llamada</option><option value="visita">Visita</option><option value="nota">Nota</option></select>' +
+          '<input type="text" name="nota" placeholder="Agregar nota de seguimiento..." required maxlength="200">' +
+          '<button type="submit" class="btn btn-secondary btn-sm">Guardar</button>' +
+        "</form>" +
+      "</div>"
+    );
+  }
+
+  function renderHerramientas(data, tutor) {
+    renderPrioridades(data, tutor);
+    renderTareas(data, tutor);
+    populateSelectTareaAlumno(data, tutor);
+    actualizarBadgeHerramientas(data, tutor);
+  }
+
+  function renderPrioridades(data, tutor) {
+    var lista = window.CANTERA.getAlumnosPrioridad(data, tutor.id);
+    var el = document.getElementById("tutor-prioridades");
+    if (!lista.length) {
+      el.innerHTML = '<p class="prioridad-empty">Todo al día. Ningún alumno requiere atención urgente en este momento.</p>';
+      return;
+    }
+    el.innerHTML = lista.map(function (r) {
+      var nivel = r.prioridad >= 2 ? "" : "nivel-medio";
+      return (
+        '<div class="prioridad-card ' + nivel + '">' +
+          '<div class="prioridad-card-head"><h4>' + r.alumno.nombre + "</h4>" +
+          '<button type="button" class="btn-seguimiento-toggle" data-ver-alumno="' + r.alumno.id + '" style="margin-top:0">Ver en Mis alumnos →</button></div>' +
+          '<div class="prioridad-razones">' + r.razones.map(function (rz) { return '<span class="razon-tag">' + rz + "</span>"; }).join("") + "</div>" +
+        "</div>"
+      );
+    }).join("");
+
+    el.querySelectorAll("[data-ver-alumno]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var alumnosBtn = document.querySelector('.tab-btn[data-tab="tab-alumnos"]');
+        if (alumnosBtn) alumnosBtn.click();
+        var alumnoId = btn.getAttribute("data-ver-alumno");
+        setTimeout(function () {
+          var card = document.querySelector('[data-alumno-card="' + alumnoId + '"]');
+          if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 60);
+      });
+    });
+  }
+
+  function renderTareas(data, tutor) {
+    var tareas = window.CANTERA.getTareasTutor(data, tutor.id).slice().sort(function (a, b) {
+      if (a.hecha !== b.hecha) return a.hecha ? 1 : -1;
+      return (a.fechaLimite || "9999-99-99") < (b.fechaLimite || "9999-99-99") ? -1 : 1;
+    });
+    var el = document.getElementById("tutor-tareas-lista");
+    if (!tareas.length) {
+      el.innerHTML = '<p class="prioridad-empty">No tienes tareas pendientes.</p>';
+      return;
+    }
+    el.innerHTML = '<ul class="tareas-lista">' + tareas.map(function (t) {
+      var al = t.alumnoId ? window.CANTERA.getAlumno(data, t.alumnoId) : null;
+      var meta = (al ? al.nombre : "General") + (t.fechaLimite ? " · Vence " + t.fechaLimite : "");
+      return (
+        '<li class="tarea-item' + (t.hecha ? " hecha" : "") + '">' +
+          '<input type="checkbox" data-tarea-id="' + t.id + '"' + (t.hecha ? " checked" : "") + ">" +
+          '<div><div class="tarea-texto">' + t.texto + '</div><div class="tarea-meta">' + meta + "</div></div>" +
+        "</li>"
+      );
+    }).join("") + "</ul>";
+
+    el.querySelectorAll("[data-tarea-id]").forEach(function (chk) {
+      chk.addEventListener("change", function () {
+        var freshData = window.CANTERA.loadData();
+        window.CANTERA.marcarTareaTutor(freshData, chk.getAttribute("data-tarea-id"), chk.checked);
+        var t = window.CANTERA.getTutor(freshData, tutor.id);
+        renderTareas(freshData, t);
+        actualizarBadgeHerramientas(freshData, t);
+      });
+    });
+  }
+
+  function populateSelectTareaAlumno(data, tutor) {
+    var select = document.getElementById("select-tarea-alumno");
+    var alumnos = window.CANTERA.getAlumnosDeTutor(data, tutor.id);
+    select.innerHTML = '<option value="">General (sin alumno)</option>' + alumnos.map(function (a) {
+      return '<option value="' + a.id + '">' + a.nombre + "</option>";
+    }).join("");
+  }
+
+  function actualizarBadgeHerramientas(data, tutor) {
+    var badge = document.getElementById("tutor-herramientas-badge");
+    if (!badge) return;
+    var prioridades = window.CANTERA.getAlumnosPrioridad(data, tutor.id).length;
+    var tareasPendientes = window.CANTERA.getTareasTutor(data, tutor.id).filter(function (t) { return !t.hecha; }).length;
+    var total = prioridades + tareasPendientes;
+    badge.innerHTML = total > 0 ? '<span class="nav-badge">' + (total > 9 ? "9+" : total) + "</span>" : "";
   }
 
   function updateTutorBadge(data, tutor) {
