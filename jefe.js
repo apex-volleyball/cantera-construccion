@@ -87,10 +87,11 @@
     var lista = document.getElementById("lista-integrantes");
     lista.innerHTML = integrantes.map(function (al) {
       var cert = window.CANTERA.certificacionBadge(al.estadoCertificacion);
+      var tutor = window.CANTERA.getTutorDeAlumno(data, al.id);
       return (
         '<div class="module-item">' +
           '<div class="avatar sm">' + window.CANTERA_UI.initialsFromName(al.nombre) + "</div>" +
-          '<div class="info"><h4>' + al.nombre + "</h4><p>" + capitalize(al.rolEnEquipoActual) + " · " + al.municipio + "</p></div>" +
+          '<div class="info"><h4>' + al.nombre + "</h4><p>" + capitalize(al.rolEnEquipoActual) + " · " + al.municipio + (tutor ? " · Tutor: " + tutor.nombre : "") + "</p></div>" +
           "<div>" + window.CANTERA_UI.badgeHTML(cert.texto, cert.clase) + "</div>" +
         "</div>"
       );
