@@ -45,7 +45,9 @@ window.CANTERA_UI = window.CANTERA_UI || {};
     nivelLaser: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="10" width="6" height="6" rx="1"/><path d="M15 13h6" stroke-dasharray="2 2"/><path d="M9 13H3" stroke-dasharray="2 2"/><path d="M12 16v5"/><path d="M9 21h6"/></svg>',
     multiherramienta: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="10" height="5" rx="1"/><path d="M13 11.5h6"/><path d="M15 10l1 1.5-1 1.5"/><path d="M18 10l1 1.5-1 1.5"/></svg>',
     inbox: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h4l2 3h4l2-3h4"/><path d="M4 12V6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6"/><path d="M4 12v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-6"/></svg>',
-    mentor: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 3-6 6-6s6 2.5 6 6"/><path d="M16 6h5v4h-2l-1.5 2V10H16z"/></svg>'
+    mentor: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 3-6 6-6s6 2.5 6 6"/><path d="M16 6h5v4h-2l-1.5 2V10H16z"/></svg>',
+  mapPin: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+  users: '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6"/><circle cx="17" cy="9" r="2.8"/><path d="M16 13.5c2.8.4 5 2.3 5 5.5"/></svg>'
   };
 
   function caratulaHTML(iconKey, colorKey) {
