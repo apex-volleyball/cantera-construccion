@@ -1083,6 +1083,26 @@ window.CANTERA = window.CANTERA || {};
     });
   }
 
+  function getInfoEquipoAlumno(data, alumnoId) {
+    var alumno = getAlumno(data, alumnoId);
+    if (!alumno || !alumno.equipoId) return null;
+    var equipo = getEquipo(data, alumno.equipoId);
+    if (!equipo) return null;
+    var obra = equipo.obraId ? getObra(data, equipo.obraId) : null;
+    var companeros = equipo.integrantes
+      .filter(function (it) { return it.alumnoId !== alumnoId; })
+      .map(function (it) {
+        return { alumno: getAlumno(data, it.alumnoId), rol: it.rol };
+      })
+      .filter(function (c) { return !!c.alumno; });
+    return {
+      equipo: equipo,
+      obra: obra,
+      rolPropio: alumno.rolEnEquipo,
+      companeros: companeros
+    };
+  }
+
   /* API PÚBLICA ============================================ */
   window.CANTERA = {
     MODULOS_FORMATIVOS: MODULOS_FORMATIVOS,
@@ -1148,6 +1168,7 @@ window.CANTERA = window.CANTERA || {};
     crearEquipo: crearEquipo,
     asignarObraAEquipo: asignarObraAEquipo,
     getMapaObras: getMapaObras,
+    getInfoEquipoAlumno: getInfoEquipoAlumno,
 
     formatFecha: formatFecha,
     scoreCategoria: scoreCategoria,
