@@ -232,11 +232,17 @@
     var equipo = window.CANTERA.getEquipo(data, obra.equipoId);
     var entradas = window.CANTERA.getBitacoraPorObra(data, obraId);
     var riesgo = window.CANTERA.riesgoBadge(obra.estadoRiesgo);
+    var integrantesEquipo = equipo ? window.CANTERA.getAlumnosPorEquipo(data, equipo.id) : [];
 
     document.getElementById("trazabilidad-resumen").innerHTML =
       '<div class="flex-between" style="margin-bottom:8px"><strong>' + obra.codigo + " — " + obra.tipoVivienda + "</strong>" +
       window.CANTERA_UI.badgeHTML(riesgo.texto, riesgo.clase) + "</div>" +
       '<p class="text-sm text-mid mb-0">Equipo asignado: ' + (equipo ? equipo.nombre : "—") + " · Etapa actual: " + obra.etapaActual + " · Avance: " + obra.porcentajeAvance + "%</p>" +
+      (integrantesEquipo.length
+        ? '<ul class="equipo-card-miembros" style="margin-bottom:8px">' + integrantesEquipo.map(function (al) {
+            return '<li><span>' + al.nombre + '</span><span class="rol-tag">' + window.CANTERA.rolEquipoLabel(al.rolEnEquipoActual) + '</span></li>';
+          }).join("") + "</ul>"
+        : "") +
       '<p class="text-sm text-mid mb-0">' + entradas.length + " entrada(s) de bitácora registradas para esta obra.</p>";
 
     document.getElementById("trazabilidad-bitacora").innerHTML = entradas.map(function (b) {
