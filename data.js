@@ -711,6 +711,7 @@ window.CANTERA = window.CANTERA || {};
   }
 
   function scoreCategoria(score) {
+    if (score === null || score === undefined) return { letra: "—", label: "Sin evaluar", desc: "Equipo recién formado, todavía sin evaluación", clase: "gray" };
     if (score >= 85) return { letra: "A", label: "Equipo A", desc: "Altamente confiable", clase: "green" };
     if (score >= 70) return { letra: "B", label: "Equipo B", desc: "Confiable con mejoras", clase: "sky" };
     if (score >= 55) return { letra: "C", label: "Equipo C", desc: "Requiere refuerzo", clase: "yellow" };
