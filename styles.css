@@ -141,17 +141,24 @@ button { font-family: inherit; cursor: pointer; }
 .role-switch {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 999px;
   padding: 4px;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.role-switch::-webkit-scrollbar { display: none; }
 .role-switch a {
   color: rgba(255,255,255,0.7);
-  font-size: 13px;
-  padding: 6px 12px;
+  font-size: 12.5px;
+  padding: 6px 10px;
   border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .role-switch a.active {
   background: var(--sky);
