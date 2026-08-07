@@ -13,6 +13,7 @@
     <a href="index.html" class="brand" style="text-decoration:none">Cantera Construcción <small>Prototipo · Fase 1</small></a>
     <div class="role-switch">
       <a href="alumno.html" class="active">Alumno</a>
+      <a href="tutor.html">Tutor</a>
       <a href="jefe.html">Jefe de Grupo</a>
       <a href="admin.html">Administrador</a>
       <a href="financiera.html">Financiera</a>
@@ -49,6 +50,8 @@
         <button class="tab-btn" data-tab="tab-catalogo">Adquirir formaciones</button>
         <button class="tab-btn" data-tab="tab-evaluacion">Evaluación y notas</button>
         <button class="tab-btn" data-tab="tab-certificados">Certificados</button>
+        <button class="tab-btn" data-tab="tab-tutor">Mi tutor</button>
+        <button class="tab-btn" data-tab="tab-buzon">Buzón<span id="buzon-tab-badge"></span></button>
       </div>
 
       <!-- TAB: RESUMEN ======================================= -->
@@ -96,6 +99,23 @@
       <div class="tab-panel" id="tab-certificados">
         <div id="certificado-principal"></div>
         <div class="mt-16" id="certificados-especializacion"></div>
+      </div>
+
+      <!-- TAB: MI TUTOR ======================================= -->
+      <div class="tab-panel" id="tab-tutor">
+        <div id="tutor-info-card"></div>
+      </div>
+
+      <!-- TAB: BUZÓN =========================================== -->
+      <div class="tab-panel" id="tab-buzon">
+        <div class="card">
+          <div class="card-title">Conversación con tu tutor</div>
+          <div class="conversacion-wrap" id="conversacion-lista"></div>
+          <form class="conv-compose no-print" id="conv-form">
+            <textarea id="conv-input" placeholder="Escribe tu duda o mensaje para tu tutor..." required></textarea>
+            <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+          </form>
+        </div>
       </div>
 
     </div>
